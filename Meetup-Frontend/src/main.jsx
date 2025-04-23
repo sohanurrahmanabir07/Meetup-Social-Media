@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import { Root } from './Pages/Root.jsx'
-import { Home } from './Pages/home.jsx'
+
 import { Messenger } from './Pages/Messenger/Messenger.jsx'
 import { MessagesHistory } from './Pages/Messenger/Components/MessagesHistory.jsx'
 import { Chatlist } from './Pages/Messenger/Components/Chatlist.jsx'
@@ -12,6 +12,7 @@ import { persistor, store } from './redux/store.js'
 import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux'
 import { Profile } from './Pages/Profile.jsx'
+import { Home } from './Pages/Home.jsx'
 
 const size = screen.width
 const router = createBrowserRouter([
