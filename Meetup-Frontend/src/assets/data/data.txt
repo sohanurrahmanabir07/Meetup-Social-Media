@@ -1,0 +1,60 @@
+profile={
+    name,profile pic,cover pic,bio,
+    about={
+        born,
+        works at,
+        school,
+        college,
+        university,
+        email
+    },
+
+    friends={
+
+        id:
+    }
+
+    
+
+}
+
+
+
+
+posts={
+    userINFo:,
+    type:'text/photo'
+    image:{
+        caption:,
+        url:
+    },
+    likes:
+    comments:[commentID..]
+    shares:{
+        [mongoose.Schema.types.objectID,ref:'User]
+    }
+    ,
+    shareMap:{
+        type:Map,
+        of: String
+    },
+
+    TimeStamp,
+
+
+},
+
+Comments:{
+    _id, userID:populate,comment,TimeStamp,PostID:populate
+    replies:[{mongoose.schema.Type.objectID,ref:replies}]
+}
+,replies:{
+    _id,userID,commentID,replie,timeStamp
+}
+
+
+notificaiton:{
+    senderID,receiverID,type:[enum],info:,timeStamp
+}
+
+

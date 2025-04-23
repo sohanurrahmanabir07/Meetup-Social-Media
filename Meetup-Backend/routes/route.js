@@ -1,0 +1,38 @@
+const express=require('express')
+const route=express.Router()
+const {show,createGroup,loadMessage,chatList,practice}=require('../controller/messengerController')
+const {registration,Login}=require('../controller/authController')
+const { fetchPost, doPost, fileUpload, loadNotification } = require('../controller/socialController')
+
+const upload = require('../Middleware/FileHandling/multer')
+
+
+
+
+
+// -----------------------------All Route--------------------------
+
+route.get('/show',show)
+route.post('/registration',registration)
+route.post('/login',Login)
+
+route.post('/create_group',createGroup)
+route.post('/load_message',loadMessage)
+
+route.get('/chatList',chatList)
+
+route.get('/practice',practice)
+
+
+
+
+// _____________________________Social Routes_______________________________
+
+route.get('/newsFeed',fetchPost)
+route.post('/newsPost',upload.single('image'),doPost)
+
+route.post('/sendFile',upload.single('image'),fileUpload)
+
+route.get('/notification',loadNotification)
+
+module.exports=route

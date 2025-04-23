@@ -1,0 +1,120 @@
+Fetching post:
+
+
+To fetch post of of my friends, i need to fetch using RESTAPI,and store it in a State,
+after that, 
+
+
+
+Making Post:
+
+
+it i will work through RESAPI and after getting the success statust from server, i will emit a event which will send those post to all those freinds newsFeed, using socket, also i will put the latest post in my sstate as well
+
+
+#task
+<!-- make newsfeed, -->
+
+fetched data will be mapped here, randomly select a option to show suggestions after showing few posts,
+
+
+<!-- make profile page: -->
+
+onClick will take to the taking users id as query, after thatt profile page will load the infomation,
+
+a modal should be built for showing photos,
+each photo will have all the post informatiopn.
+
+
+for profile there will be 4 components for tabbing
+Feed,About,Friends,Photos
+
+there will be smaller window for about,photos,friends
+
+
+<!-- make navbar -->
+
+
+<!-- make notification  -->
+
+all notification will be fetched, 
+
+for friend request:, it will show accept and declince button,
+if accept then it will show friend request accepted and then, in my friends Map, person will be added and a notification will be sent to that person, after that this notification will be deleted.same goes for decline.
+
+for like/comment:  like->  if like a post, it will emit a notification with having post info inside the info field,it will save it to the notifacion collection
+for commenting post: it will take comment data inside the info field, save to collection
+for friend request: it will contain the users info inside the info field,
+
+
+for comment and like, after reaching to server, for comment it will store in the database first then, then it will fetch the latest post and emit back to me as well as to user.
+
+my and the users feed data will also be updated,
+
+
+for the Frriend request and accepting part:
+
+Request-> notfication will contain mine info and , first it will save to database and then, will be sent to the friends , notfication panel will show this, 
+
+accept-> if the user accept it, notification schema will contain the requested user's info and will 
+be sent to him, then senderID will be mine and recieverID will be his id,
+
+after becoming freinds the notification will be deleted, 
+
+for the 
+
+
+
+
+
+
+
+
+newsFeed and Posting: Done----->
+
+
+to post image or status, user will use the RESTAPI, using that it will reach to server and upload the image to cloud if the post is about picture, so after the picture information is saved to database, according to response, in the frontend a event will emit regarding updating friends newsFeed upgradation. 
+
+
+
+
+_______need to do learn___________,
+
+# after selecting photo, how will the photo show on the div, in fact during the upload, a loading should show,
+
+#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##likes and comments Method update->
+
+
+if someone likes on a post, notificaiton Schema will   hold the post inside info and sent to the server using RESTAPI, then, first it will save to database, and info will be extracted,and from database latest post will be extracted and likes will be incremented, and will be sent to posters all friends who are online, and also notificaion emit will be also sent to the user,
+
+same for, comment,
+
+
+for notification of likes and comments, notification schema contains likes and comments, based on this, notfication will be shown,
+
+for comment, info will consist of comment schema, after server saves into comment collection, it will also fetch the posts and insert it into the posts. commment array.
+and latest posts will be sent to the users friends as well as users.
+
+
+
+
+###Send friend request updated->
+
+
+when a user send friend request, it goes through restAPI and then it saves the notification to database, if it is successful, it comes back to frontend part and a event emits containing the notification 
