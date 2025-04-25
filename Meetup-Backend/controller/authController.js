@@ -31,7 +31,7 @@ const Login = async (req, res) => {
 
     console.log('Login',req.body)
 
-    const result = (await Users.find({ phone: phone }))[0]
+    const result = (await Users.find({ phone: phone }).populate('friendList'))[0]
     if (result) {
         try {
             const password_check = await bcrypt.compare(password, result.password)

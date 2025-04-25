@@ -4,60 +4,177 @@ import { faComment, faThumbsUp } from "@fortawesome/free-regular-svg-icons"
 import { faShare } from "@fortawesome/free-solid-svg-icons"
 import { SendingBox } from '../../../Pages/Messenger/Components/SendingBox'
 import { Comment } from "./Comment"
+import { useState } from "react"
+import socket from "../../../Socket/SocketServer"
+import { useSelector } from "react-redux"
+import { comment } from "postcss"
 
-export const Post = () => {
-    return (
-        <div className="space-y-2 p-5 max-sm:p-2 border-2 my-3 border-slate-400 rounded-md w-90/100  max-sm:w-full">
-
-            <section className="flex space-x-2">
-                <ProfileIcon width={12} height={12} ></ProfileIcon>
-                <div>
-                    <p className="text-lg font-semibold">Sohanur Rahman Abir  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >21 Hours Ago</span> </p>
-                    <p className="text-sm">Software Engineer at Google</p>
-                </div>
-
-            </section>
-            {/* _____________Caption________________ */}
-            <section>
-                <p className="text-base font-semibold text-gray-600">I'm thrilled to share that I've completed a graduate certificate course in project management with the president's honor roll.</p>
-            </section>
-
-            <section >
-                <img className="w-full rounded-lg " src={`https://www.hindustantimes.com/ht-img/img/2025/03/29/550x309/8__taare_zameen_par_1743059484900_1743247296802.jpg`} alt="" />
-            </section>
-
-            <section className="flex justify-between items-center">
-
-                <div className="flex space-x-2">
-                    <p className="text-base"><FontAwesomeIcon icon={faThumbsUp} className=" cursor-pointer" size="lg" ></FontAwesomeIcon> (59)</p>
-                    <p className="text-base">
-                        <FontAwesomeIcon icon={faComment} className="cursor-pointer"  ></FontAwesomeIcon> (60)
-                    </p>
-                </div>
-
-                <div>
-                    <FontAwesomeIcon icon={faShare} className="cursor-pointer" size="xs"></FontAwesomeIcon>
-                </div>
-
-            </section>
-
-
-            <section className="flex items-center">
-                <ProfileIcon width={12} height={12}></ProfileIcon>
-                <div className="bg-purple-500  w-full h-50/100 text-white   p-1 rounded-lg">
-                    <SendingBox></SendingBox>
-                </div>
-            </section>
-            <section className="lg:ml-10 max-sm:ml-3 w-full space-y-4">
-                <Comment></Comment>
-                <Comment></Comment>
-            </section>
+export const Post = ({ item }) => {
+    const [totalComment, setTotalComment] = useState(4)
+    const [messagField, setMessageField] = useState('')
+    const [showComments, setShowComments] = useState(false)
+    const user = useSelector((state) => state.SocialMedia.users)
+    const handleLike = () => {
 
 
 
+        const data = {
+            senderID: user._id,
+            receiverID: item.userID._id,
+            info: item,
+            type: 'like',
+            TimeStamp: new Date()
+
+        }
+
+
+        socket.emit('incoming_notification', data)
+    }
+
+    const handleSend = (e) => {
+        e.preventDefault()
+
+        const comment = {
+            userID: user._id,
+            comment: messagField,
+            postID: item._id,
+        }
+
+        const data = {
+            senderID: user._id,
+            receiverID: item.userID._id,
+            info: comment,
+            type: 'comment',
+            TimeStamp: new Date()
+
+        }
+
+        socket.emit('incoming_notification', data)
+
+        setMessageField('')
+
+    }
 
 
 
-        </div>
-    )
+
+    if (item) {
+        return (
+            <div className="space-y-2 p-5 max-sm:p-2 border-2 my-3 border-slate-400 rounded-md w-90/100  max-sm:w-full">
+
+                <section className="flex space-x-2">
+                    <ProfileIcon width={12} height={12} ></ProfileIcon>
+                    <div>
+                        <p className="text-lg font-semibold"> {item.userID['name']}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >21 Hours Ago</span> </p>
+                        <p className="text-sm">Software Engineer at Google</p>
+                    </div>
+
+                </section>
+                {/* _____________Caption________________ */}
+                <section>
+                    <p className="text-base font-semibold text-gray-600">
+
+                        {
+
+                            item?.info || item?.caption
+
+                        }</p>
+                </section>
+
+                {
+                    item?.type == 'photo' ?
+
+                        (
+
+                            <section >
+                                <img className="w-full rounded-lg aspect-3/2" src={`${item?.imageUrl || `https://media.istockphoto.com/id/1055079680/vector/black-linear-photo-camera-like-no-image-available.jpg?s=612x612&w=0&k=20&c=P1DebpeMIAtXj_ZbVsKVvg-duuL0v9DlrOZUvPG6UJk=`} `} alt="" />
+                            </section>
+
+                        )
+                        :
+
+                        ''
+                }
+
+
+                <section className="flex justify-between items-center">
+
+                    <div className="flex space-x-2">
+                        <p className="text-base" onClick={handleLike} >
+                            <FontAwesomeIcon icon={faThumbsUp} className=" cursor-pointer" size="lg" ></FontAwesomeIcon> ({item?.likes})
+                        </p>
+                        <p className="text-base">
+                            <FontAwesomeIcon icon={faComment} className="cursor-pointer"  ></FontAwesomeIcon> ({item['comments']?.length})
+                        </p>
+                    </div>
+
+                    <div>
+                        <FontAwesomeIcon icon={faShare} className="cursor-pointer" size="xs"></FontAwesomeIcon>
+                    </div>
+
+                </section>
+
+
+                <section className="flex items-center">
+                    <ProfileIcon width={12} height={12}></ProfileIcon>
+                    <div className="bg-purple-500  w-full h-50/100 text-white   p-1 rounded-lg">
+                        <SendingBox messagField={messagField} setMessageField={setMessageField} handleSend={handleSend} ></SendingBox>
+                    </div>
+                </section>
+                <section className="lg:ml-10 max-sm:ml-3 w-full space-y-4 duration-300 ease-in">
+
+                    {
+                       showComments &&  item?.comments?.slice(0, totalComment).map((comment, index) => {
+
+                            return (
+                                <Comment key={index} comment={comment}></Comment>
+
+                            )
+                        })
+
+
+                    }
+                    {
+                        showComments ? item?.comments?.length > totalComment ?
+                            (
+                                <div className="text-center">
+                                    <button className="btn btn-ghost btn-secondary" onClick={() => setTotalComment((prev) => prev + 4)} >....Load More</button>
+                                </div>
+                            )
+                            :
+                            (
+                                <div className="text-center">
+                                    <button className="btn btn-ghost btn-secondary" onClick={() => setTotalComment((prev) => prev - 4)} >....Load Less</button>
+                                </div>
+                            )
+                            :
+                            ''
+                    }
+                    {
+                       item?.comments?.length!=0? showComments ?
+                            (
+                                <div className="text-center">
+                                    <button className="btn btn-ghost btn-secondary" onClick={() =>setShowComments(!showComments)} >Hide Comments</button>
+                                </div>
+
+                            )
+                            :
+                            ( <div className="text-center">
+                                <button className="btn btn-ghost btn-secondary" onClick={() =>setShowComments(!showComments)} >Show Comments</button>
+                            </div>)
+                            :
+                            ''
+                    }
+
+                </section>
+
+
+
+
+
+
+            </div>
+        )
+    }
+
 }

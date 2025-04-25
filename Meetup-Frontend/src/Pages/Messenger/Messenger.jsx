@@ -19,23 +19,6 @@ export const Messenger = () => {
     const [listChat, setListChat] = useState({})
     const [onlineUser, setOnlineUser] = useState(null)
 
-    // const time=["2025-04-14T19:09:40.808Z","2025-04-12T19:36:23.163Z","2025-04-14T19:09:12.882Z","2025-04-12T19:34:07.217Z"]
-
-    // for (let index = 0; index < time.length; index++) {
-    //     time[index]=new Date(time[index])
-
-    // }
-
-    // console.log('newTIme',time.sort())
-
-    // const sort=time.sort((a,b)=> new Date(a)-new Date(b))
-
-    // console.log('sort',sort)
-
-    // console.log('time',new Date("2025-10-14T19:09:12.882Z"))
-
-
-
 
     useEffect(() => {
         if (user) {

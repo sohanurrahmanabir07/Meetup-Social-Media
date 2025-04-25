@@ -4,13 +4,13 @@ import { faMessage } from "@fortawesome/free-regular-svg-icons"
 import { faUserXmark } from "@fortawesome/free-solid-svg-icons"
 
 
-export const FriendCard = () => {
+export const FriendCard = ({item}) => {
     return (
         <div className="border-2 p-5 border-slate-500 rounded-md  flex flex-col justify-center items-center  space-y-2">
 
             <ProfileIcon width={15} height={15} ></ProfileIcon>
 
-            <p className="text-md font-semibold"> Ninja Hathori </p>
+            <p className="text-md font-semibold"> {item.name} </p>
 
             <section className="flex space-x-5">
 

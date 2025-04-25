@@ -5,6 +5,7 @@ import axios from "axios"
 import { useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import Swal from "sweetalert2"
+import socket from "../../../Socket/SocketServer"
 
 export const NewPost = () => {
     const PhotoInputRef = useRef();
@@ -19,7 +20,7 @@ export const NewPost = () => {
         caption: '',
         imageUrl: '',
         shareMap: {},
-        TimeStamp: new Date()
+        // TimeStamp: new Date()
     })
 
     const handleClick = (v) => {
@@ -33,7 +34,6 @@ export const NewPost = () => {
     };
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-
         if (file) {
 
             const path = URL.createObjectURL(file)
@@ -54,7 +54,7 @@ export const NewPost = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        console.log('in the form')
+
         let formData = new FormData()
         if (File) {
 
@@ -67,11 +67,11 @@ export const NewPost = () => {
                 data.type = 'photo'
                 setNewPost(data)
 
+                formData.append('image', File)
+                formData.append('data', JSON.stringify(data))
+
+
             }
-
-
-            formData.file = File,
-                formData.data = JSON.stringify(newPost)
 
 
         } else {
@@ -84,7 +84,6 @@ export const NewPost = () => {
         })
             .then((res) => {
 
-                console.log('response', res)
 
                 if (res.status == 201) {
                     Swal.fire({
@@ -94,9 +93,29 @@ export const NewPost = () => {
 
                     });
 
+                    const data={
+                        friends:user.friends,
+                        post:res.data
+                    }
+
+                    socket.emit('UpdateFeed',data)
+
+
+
 
 
                 }
+                setNewPost({
+                    userID: user._id,
+                    type: 'status',
+                    info: '',
+                    caption: '',
+                    imageUrl: '',
+                    shareMap: {},
+                    TimeStamp: new Date()
+                })
+                setFile(null)
+                setImagePath(null)
 
 
             })
@@ -109,16 +128,7 @@ export const NewPost = () => {
                 });
             })
 
-        setNewPost({
-            userID: user._id,
-            type: 'status',
-            info: '',
-            caption: '',
-            imageUrl: '',
-            shareMap: {},
-            TimeStamp: new Date()
-        })
-        setFile(null)
+        
 
 
 
@@ -126,8 +136,6 @@ export const NewPost = () => {
 
     }
 
-    // console.log('newPost', newPost)
-    // console.log('File', File)
 
     return (
         <div className="space-y-2 p-5 border-2 border-slate-500 rounded-md w-90/100 max-sm:w-full">

@@ -9,6 +9,8 @@ const SocialMediaSocket = (socket, io) => {
 
     socket.on('UpdateFeed', (data) => {
 
+        console.log('For Update , it came here', data);
+
         const { post, friends } = data
 
         Object.keys(friends).map((id) => {
@@ -16,6 +18,8 @@ const SocialMediaSocket = (socket, io) => {
                 socket.to(onlineUsers[id]).emit('InsertNewPost', post)
             }
         })
+
+        socket.emit('InsertNewPost', post)
 
 
     })
@@ -40,7 +44,6 @@ const SocialMediaSocket = (socket, io) => {
                 if (result) {
                     const updatedLike = parseInt(result.likes) + 1
                     const update = await Posts.updateOne({ _id: post._id }, { likes: updatedLike })
-                    const likeNotification = await Notification()
 
                 }
 
@@ -59,29 +62,41 @@ const SocialMediaSocket = (socket, io) => {
 
             }
             if (type == 'comment' || type == 'like') {
-                const result = await Posts.findById(id).populate('comments').populate('shares').populate('userID').lean()
+                const result = await Posts.findById(id).populate({
+                    path: 'comments',
+                    options: { sort: { 'Timestamp': -1 } },
+                    populate: {
+                        path: 'userID',
+                        model: 'Users'
+                    }
+                }).populate('shares').populate('userID').lean()
                 if (result) {
 
                     const friends = result.userID.friends
                     data.info = result
-                    finalResponse = data
+                    
 
                     const notification = new Notification(data)
                     const LikeCommentNotify = await notification.save()
-                    if (LikeCommentNotify) {
+                    const newResult=await Notification.findById(LikeCommentNotify._id).populate('senderID').populate('receiverID')
+                    finalResponse = newResult
+                    if (newResult) {
+
+
                         Object.keys(friends).map((id) => {
-                            if (onlineUsers[id]!=socket.id) {
+                            if (onlineUsers[id]) {
+
                                 socket.to(onlineUsers[id]).emit('updateFeed', result)
-                            }else{
-                                socket.emit('updateFeed', result)
                             }
+
                         })
+                        if (onlineUsers[result.userID._id]) {
+                            socket.to(onlineUsers[result.userID._id]).emit('updateFeed', result)
+
+                        }
+                        socket.emit('updateFeed', result)
+
                     }
-
-
-
-
-
 
 
                 }
@@ -98,7 +113,7 @@ const SocialMediaSocket = (socket, io) => {
 
                 if (save) {
                     const updatedInfo = await FriendRequst.findById(save._id).populate('senderID').populate('receiverID').lean()
-                    data.info=updatedInfo
+                    data.info = updatedInfo
 
                 }
 
@@ -126,6 +141,7 @@ const SocialMediaSocket = (socket, io) => {
         if (finalResponse) {
 
 
+            console.log('receiver',data.receiverID)
             if (onlineUsers[data.receiverID]) {
                 socket.to(onlineUsers[data.receiverID]).emit('getNotificaion', finalResponse)
             }

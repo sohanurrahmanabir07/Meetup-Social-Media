@@ -1,14 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { ThemeController } from './NavbarTools/ThemeController'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons'
-import { useNavigate } from 'react-router'
+import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeUser } from '../redux/SocialStore'
 import socket from '../Socket/SocketServer'
 import { faBell } from '@fortawesome/free-regular-svg-icons'
 import { NotificationInfo } from './NavbarTools/NotificationInfo'
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { useGetUser } from '../CustomHooks/useGetUser'
+import { ProfileIcon } from '../Components/Homer-Component/Components/ProfileIcon'
 
 export const Navbar = () => {
     const navigate = useNavigate()
@@ -16,40 +18,77 @@ export const Navbar = () => {
     const user = useSelector((state) => state.SocialMedia.users)
     const dispatch = useDispatch()
 
-    // const socket=io(import.meta.env.VITE_BACKEND_URL)
+    let allUsers = useGetUser()
+
+    const [search, setSearch] = useState('')
+
+
+    const handleChange = (e) => {
+        setSearch(e.target.value)
+
+    }
+
+    const filterUser = allUsers?.filter((item) => item['name'].toLowerCase().includes(search.toLowerCase()))
+
+
+
 
     return (
         <div className='bg-primary-content'>
 
 
             <div className="navbar  flex justify-between  lg:max-w-[1500px] lg:m-auto ">
-                <div className="cursor-pointer" onClick={() => navigate('/')} >
+                <div className="cursor-pointer" onClick={() => navigate('/home')} >
                     <a className="text-2xl">Meetup🔥</a>
                 </div>
                 {/* searching box */}
 
-                <section className='w-4/10 relative max-sm:hidden'>
+                {user && (
+                    <section className='w-4/10 relative max-sm:hidden'>
 
-                    <label className="input  w-full focus:none outline:none" >
-                        <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                            <g
-                                strokeLinejoin="round"
-                                strokeLinecap="round"
-                                strokeWidth="2.5"
-                                fill="none"
-                                stroke="currentColor"
-                            >
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <path d="m21 21-4.3-4.3"></path>
-                            </g>
-                        </svg>
-                        <input type="search" className="grow focus:none outline:none broder-3 border-slate-700" placeholder="Search" />
+                        <label className="input  w-full focus:outline-none" >
+                            <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <g
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeWidth="2.5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                >
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <path d="m21 21-4.3-4.3"></path>
+                                </g>
+                            </svg>
+                            <input type="search" onChange={handleChange} value={search} className="grow focus:outline-none broder-3 border-slate-700" placeholder="Search" />
 
-                    </label>
+                        </label>
+                        <div className='absolute w-full rounded-md bg-white font-semibold text-lg list-none '>
+                            {
+                                search.length > 1 && filterUser?.map((item, index) => {
+                                    return (
 
-                </section>
+                                        <div onClick={() => {
+                                            navigate('/profile', { state: { user: item } })
 
-                {/* ________Searching ICon in Mobile Device________ */}
+                                            setSearch('')
+
+
+
+                                        }} className='flex space-x-3 cursor-pointer items-center hover:bg-purple-900 hover:text-white p-2'>
+                                            <ProfileIcon width={10} height={10}></ProfileIcon>
+                                            <li key={index} >{item?.name}</li>
+                                        </div>
+
+                                    )
+                                })
+                            }
+
+                        </div>
+
+                    </section>
+                )}
+
+
                 {/* buttonss */}
                 <section className='flex space-x-4 items-center'>
 
@@ -57,9 +96,14 @@ export const Navbar = () => {
                         <FontAwesomeIcon icon={faMagnifyingGlass} size='lg' ></FontAwesomeIcon>
                     </div>
 
-                    <div className='cursor-pointer' onClick={() => navigate('/msg')}>
-                        <FontAwesomeIcon icon={faFacebookMessenger} size='lg' />
-                    </div>
+                    {
+                        user && (
+                            <div className='cursor-pointer' onClick={() => navigate('/msg')}>
+                                <FontAwesomeIcon icon={faFacebookMessenger} size='lg' />
+                            </div>
+
+                        )
+                    }
 
                     <div className='cursor-pointer'>
                         <ThemeController></ThemeController>
@@ -68,10 +112,10 @@ export const Navbar = () => {
                     {
                         user ?
 
-                            (<div className="dropdown dropdown-center cursot-pointer relative">
-                              
+                            (<div className="dropdown dropdown-center cursot-pointer">
+
                                 <FontAwesomeIcon tabIndex={0} icon={faBell} size='lg' className='cursor-pointer' ></FontAwesomeIcon>
-                                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 lg:w-[500px] max-sm:w-52 absolute p-2 shadow-sm">
+                                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 lg:w-[400px] max-sm:w-52 p-2 shadow-sm md:w-52">
                                     <NotificationInfo></NotificationInfo>
                                 </ul>
                             </div>)

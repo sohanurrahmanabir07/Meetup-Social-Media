@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { ProfileIcon } from '../Components/Homer-Component/Components/ProfileIcon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -8,13 +8,50 @@ import { Post } from '../Components/Homer-Component/Components/Post'
 import { About } from '../Components/Homer-Component/Components/Profile Component/About'
 import { Photos } from '../Components/Homer-Component/Components/Profile Component/Photos'
 import { FriendList } from '../Components/Homer-Component/Components/Profile Component/FriendList'
-import { Link, NavLink } from 'react-router'
+import { Link, NavLink, useLocation, useSearchParams } from 'react-router'
 import { HomePhotos } from '../Components/Homer-Component/Components/Profile Component/HomePhotos'
 import { HomeFriendList } from '../Components/Homer-Component/Components/Profile Component/HomeFriendList'
+import { useMyPost } from '../CustomHooks/useMyPost'
+import { useSelector } from 'react-redux'
+import axios from 'axios'
+import { faMessage, faUser } from '@fortawesome/free-regular-svg-icons'
 
 export const Profile = () => {
 
     const [active, setActive] = useState('feed')
+    const location = useLocation()
+    const [myPost, setMyPost] = useState(null)
+
+    const [totalPost, setTotalPost] = useState(5)
+
+    let myProfile = useSelector((state) => state.SocialMedia.users)
+    const [user, setUser] = useState(location.state?.user || myProfile)
+
+    const myFriend = myProfile.friends
+
+
+
+    useEffect(() => {
+
+        if (location.state?.user) {
+            setUser(location.state.user);
+        }
+        if(location.state?.feed){
+            setActive('friends')
+        }
+    }, [location.state]);
+
+    useEffect(() => {
+        if (user?._id) {
+            axios.get(`${import.meta.env.VITE_BACKEND_URL}/mypost?id=${user._id}`, {
+                withCredentials: true
+            })
+                .then((res) => setMyPost(res.data))
+                .catch((err) => console.log(err.message));
+        }
+    }, [user]);
+
+
     return (
         <div className='md:max-w-[1500px] md:mx-auto flex'>
 
@@ -37,7 +74,7 @@ export const Profile = () => {
 
                             <div className='flex justify-between md:w-85/100 w-full items-center'>
                                 <div>
-                                    <p className='font-bold md:text-2xl'>Sohanr Rahman Abir</p>
+                                    <p className='font-bold md:text-2xl'>{user?.name}</p>
                                 </div>
                                 <div>
                                     <button className="btn btn-soft btn-secondary ">Edit Profile <FontAwesomeIcon icon={faPen} size='sm'></FontAwesomeIcon></button>
@@ -48,9 +85,60 @@ export const Profile = () => {
 
                     </section>
 
+                    <section className='flex space-x-3'>
 
 
-                    <section className='flex space-x-3 flex-wrap text-lg font-semibold my-3 px-2'>
+
+
+
+                        {
+                            ((location.state && (myProfile._id != location.state.user._id))) ?
+
+                                !(myFriend[location.state.user._id]) ?
+
+                                    (
+                                        <div className='flex items-center btn  btn-ghost btn-secondary'  >
+                                            <FontAwesomeIcon icon={faUser} size='lg' > </FontAwesomeIcon>
+                                            <p>Add Friend</p>
+                                        </div>
+                                    )
+
+                                    :
+
+                                    (
+                                        <div className='flex items-center btn  btn-ghost btn-secondary'>
+                                            <FontAwesomeIcon icon={faUser} size='lg' > </FontAwesomeIcon>
+                                            <p>Friends</p>
+                                        </div>
+                                    )
+
+
+                                :
+                                ''
+
+
+                        }
+
+                        {
+                            ((location.state) && (location.state.user._id != myProfile._id)) ?
+                                (
+                                    < div className='flex items-center btn btn-ghost btn-secondary'>
+                                        <FontAwesomeIcon icon={faMessage} size='lg' > </FontAwesomeIcon>
+                                        <p>Message</p>
+                                    </div>
+                                )
+                                :
+                                ''
+
+                        }
+
+
+
+
+                    </section>
+
+
+                    <section className='flex space-x-3 flex-wrap  my-3 px-2'>
 
                         <div className=' flex items-center space-x-2'>
                             <FontAwesomeIcon icon={faBriefcase}></FontAwesomeIcon>
@@ -79,55 +167,95 @@ export const Profile = () => {
                     </div>
 
 
-                </div>
+                </div >
 
-                {active == 'feed' ? (
+                {
+                    active == 'feed' ? (
 
-                    <div className='space-y-10'>
+                        <div className='space-y-10'>
 
-                        <section>
-                            <NewPost></NewPost>
-                        </section>
-                        <section>
-                            <Post></Post>
-                        </section>
+                            {
+                                location.state && (location.state.user._id == myProfile._id) ?
+                                    (
+                                        <section>
+                                            <NewPost></NewPost>
+                                        </section>
+                                    )
+                                    :
+                                    ''
+                            }
 
-                    </div>
+                            <section>
+
+                                {
+                                    myPost != null && myPost?.slice(0, totalPost).map((item, index) => {
+                                        return (<Post key={index} item={item}></Post>)
+                                    })
+                                }
+                                {
+                                    myPost?.length > totalPost ?
+                                        (
+                                            <div className="text-center">
+                                                <button className="btn btn-ghost btn-secondary" onClick={() => setTotalPost((prev) => prev + 5)} >....Load More</button>
+                                            </div>
+                                        )
+                                        :
+
+                                        myPost?.length == 0 ?
+
+                                            (
+                                                <div>
+                                                    <p className='text-3xl font-bold text-center'>
+                                                        ...No Post Yet...
+                                                    </p>
+                                                </div>
+                                            )
+                                            :
+                                            (
+                                                <div className="text-center">
+                                                    <button className="btn btn-ghost btn-secondary" onClick={() => setTotalPost((prev) => prev - 5)} >....Load Less</button>
+                                                </div>
+                                            )
+                                }
+
+                            </section>
+
+                        </div>
 
 
 
-                )
+                    )
 
-                    :
-                active=='about'?
+                        :
+                        active == 'about' ?
 
-                (
-                    <div>
+                            (
+                                <div>
 
-                        <About></About>
-                    </div>
-                )
-                :
-                active=='photos'?
-                (
-                    <div className='max-sm:flex max-sm:justify-center max-sm:items-center'>
+                                    <About></About>
+                                </div>
+                            )
+                            :
+                            active == 'photos' ?
+                                (
+                                    <div className='max-sm:flex max-sm:justify-center max-sm:items-center'>
 
-                        <HomePhotos></HomePhotos>
-                    </div>
-                )
-                :
-                (
-                    <div className='max-sm:flex max-sm:justify-center max-sm:items-center '>
-                        
-                        <HomeFriendList></HomeFriendList>   
-                    </div>
-                )
+                                        <HomePhotos></HomePhotos>
+                                    </div>
+                                )
+                                :
+                                (
+                                    <div className='max-sm:flex max-sm:justify-center max-sm:items-center '>
 
-        }
+                                        <HomeFriendList friends={user?.friendList} ></HomeFriendList>
+                                    </div>
+                                )
+
+                }
 
 
 
-            </section>
+            </section >
 
             <section className='max-sm:hidden md:w-25/100 px-3 space-y-10'>
 
@@ -135,16 +263,16 @@ export const Profile = () => {
                     <About></About>
                 </div>
                 <div className='border-2 border-slate-500 rounded-lg'>
-                    <Photos></Photos>
+                    <Photos active={active} setActive={setActive} ></Photos>
                 </div>
                 <div className='border-2 border-slate-500 rounded-lg'>
-                    <FriendList></FriendList>
+                    <FriendList friends={user?.friendList} active={active} setActive={setActive}  ></FriendList>
                 </div>
 
 
             </section>
 
 
-        </div>
+        </div >
     )
 }

@@ -42,6 +42,7 @@ const PostSchema = new mongoose.Schema({
         type: Map,
         of: String
     },
+   
     TimeStamp: String
 
 })

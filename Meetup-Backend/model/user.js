@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-
+const Schema=mongoose.Schema
 const UsersSchema=new mongoose.Schema({
     name:String,
     address:String,
@@ -8,6 +8,7 @@ const UsersSchema=new mongoose.Schema({
         type:Map,
         of:String
     },
+    friendList:[{type:Schema.Types.ObjectId,ref:'Users'}],
     phone:{
         type:String,
         unique:true,

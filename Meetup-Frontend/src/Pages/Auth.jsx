@@ -10,7 +10,11 @@ import socket from '../Socket/SocketServer'
 export const Auth = () => {
 
     const location = useLocation()
-    const type = location.state.from
+    let type = location.state?.from
+
+    if(!type){
+        type='signin'
+    }
 
     const dispatch=useDispatch()
 
@@ -96,12 +100,14 @@ export const Auth = () => {
                 console.log(res)
                 if (res.status == 201) {
 
-                    navigate('/')
+                    navigate('/home')
                     Swal.fire({
                         title: "Login Successful!",
                         text: "You clicked the button!",
                         icon: "success"
                     })
+
+              
 
                     socket.connect()
                     

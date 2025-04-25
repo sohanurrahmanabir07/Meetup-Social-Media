@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const Photos = () => {
+export const Photos = ({active,setActive}) => {
     return (
         <div className='p-2 space-y-4'>
 
@@ -11,7 +11,7 @@ export const Photos = () => {
                 </p>
 
 
-                <button className="btn btn-dash btn-secondary">See All Photos</button>
+                <button className="btn btn-dash btn-secondary" onClick={()=>setActive('photos')} >See All Photos</button>
 
             </section>
 

@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react";
 
 const initialState = {
     users:null,
+    notification:[]
 
 };
 
@@ -19,9 +21,19 @@ const SocialMediaSlice = createSlice({
         state.users=null
         console.log('after removing from redux',state.users)
 
-    }
-  },
-});
+    },
+    addNotification:(state,action)=>{
 
-export const { addUser,removeUser } = SocialMediaSlice.actions;
+      state.notification=[action.payload,...state.notification]
+
+    },
+    loadNotification:(state,action)=>{
+      state.notification=action.payload
+
+
+    
+    }
+}});
+
+export const { addUser,removeUser,addNotification,loadNotification } = SocialMediaSlice.actions;
 export default SocialMediaSlice.reducer;

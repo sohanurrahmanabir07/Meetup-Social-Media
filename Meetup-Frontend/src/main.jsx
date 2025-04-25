@@ -13,6 +13,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { Provider } from 'react-redux'
 import { Profile } from './Pages/Profile.jsx'
 import { Home } from './Pages/Home.jsx'
+import { ProtectiveRoute } from './Components/ProtectiveRoute.jsx'
 
 const size = screen.width
 const router = createBrowserRouter([
@@ -21,8 +22,8 @@ const router = createBrowserRouter([
     element: <Root></Root>,
     children: [
       {
-        path: "/",
-        element: <Home></Home>
+        path: "/home",
+        element: <ProtectiveRoute><Home></Home></ProtectiveRoute> 
       },
       {
         element:<Messenger></Messenger>,
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
       },
       {
         element:<Profile></Profile>,
-        path:'/profile'
+        path:'/profil'
       },
      
       {
