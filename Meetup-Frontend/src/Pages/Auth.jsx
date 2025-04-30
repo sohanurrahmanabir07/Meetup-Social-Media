@@ -44,7 +44,7 @@ export const Auth = () => {
             delete formData.confirmPassword
 
 
-            axios.post(`${import.meta.env.VITE_BACKEND_URL}/registration`, formData, {
+            axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/registration`, formData, {
                 withCredentials: true,
                 headers: {
                     'Content-type': 'application/json'
@@ -91,7 +91,7 @@ export const Auth = () => {
             delete formData.chatHistory
             delete formData.friends
 
-            axios.post(`${import.meta.env.VITE_BACKEND_URL}/login`, formData, {
+            axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/login`, formData, {
                 withCredentials: true,
                 headers: {
                     'Content-type': 'application/json'

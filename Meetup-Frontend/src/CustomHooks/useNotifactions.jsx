@@ -8,7 +8,7 @@ export const useNotifactions = (id) => {
   const l=10
   useEffect(()=>{
 
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/notification?p=${p}&l=${l}&id=${id}`,{
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/notification?p=${p}&l=${l}&id=${id}`,{
         withCredentials:true
     })
     .then((res)=>setNotification(res.data))

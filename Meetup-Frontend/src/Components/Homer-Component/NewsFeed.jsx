@@ -15,7 +15,7 @@ export const NewsFeed = () => {
 
   useEffect(() => {
 
-    axios.post(`${import.meta.env.VITE_BACKEND_URL}/newsFeed?page=${page}`, user, {
+    axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/newsFeed?page=${page}`, user, {
       withCredentials: true
     })
       .then((res) => {

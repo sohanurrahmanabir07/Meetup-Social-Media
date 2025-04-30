@@ -78,7 +78,7 @@ export const NewPost = () => {
         }
 
 
-        axios.post(`${import.meta.env.VITE_BACKEND_URL}/newsPost`, formData, {
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/newsPost`, formData, {
             withCredentials: true
         })
             .then((res) => {

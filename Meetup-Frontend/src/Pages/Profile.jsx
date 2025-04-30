@@ -59,7 +59,7 @@ export const Profile = () => {
 
     useEffect(() => {
         if (user?._id) {
-            axios.get(`${import.meta.env.VITE_BACKEND_URL}/mypost?id=${user?._id}`, {
+            axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/mypost?id=${user?._id}`, {
                 withCredentials: true
             })
                 .then((res) => setMyPost(res.data))

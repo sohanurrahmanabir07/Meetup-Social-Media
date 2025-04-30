@@ -68,7 +68,7 @@ export const Messenger = () => {
     useEffect(() => {
 
 
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/chatList?id=${user._id}`, {
+        axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/chatList?id=${user._id}`, {
             withCredentials: true,
         })
             .then((res) => {

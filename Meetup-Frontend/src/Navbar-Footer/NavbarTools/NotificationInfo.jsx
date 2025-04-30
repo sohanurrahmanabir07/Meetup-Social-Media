@@ -21,7 +21,7 @@ export const NotificationInfo = ({unreadCount,setUnreadCount}) => {
         console.log('mark as read')
         dispatch(markNotification(index))
 
-        axios.post(`${import.meta.env.VITE_BACKEND_URL}/markReadNotification`,{
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/markReadNotification`,{
             id:notification[index]._id
         },{withCredentials:true})
         .then((res)=>{

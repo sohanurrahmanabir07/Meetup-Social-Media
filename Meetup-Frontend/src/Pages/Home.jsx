@@ -32,7 +32,7 @@ export const Home = () => {
 
   useEffect(() => {
     if (user) {
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/getRequestPendingList?id=${user._id}`)
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getRequestPendingList?id=${user._id}`)
         .then((res) => {
           // console.log(res.data)
           // console.log(res.data.pendingList)

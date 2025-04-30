@@ -19,7 +19,7 @@ export const Chat = ({ selected, setSelected }) => {
     }
     useEffect(() => {
 
-        axios.post(`${import.meta.env.VITE_BACKEND_URL}/load_message?type=${type}`, {
+        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/load_message?type=${type}`, {
             userID: user._id,
             id: selected._id
         }, {

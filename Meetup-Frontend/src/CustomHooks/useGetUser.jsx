@@ -6,7 +6,7 @@ export const useGetUser = () => {
 
   useEffect(()=>{
 
-    axios.get(`${import.meta.env.VITE_BACKEND_URL}/getUsers`,{
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getUsers`,{
         withCredentials:true
     })
     .then((res)=>setAllUsers(res.data))

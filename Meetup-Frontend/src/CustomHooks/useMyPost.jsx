@@ -7,7 +7,7 @@ export const useMyPost = (id) => {
 
   useEffect(() => {
     if (id) {
-      axios.get(`${import.meta.env.VITE_BACKEND_URL}/mypost?id=${id}`, {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/mypost?id=${id}`, {
         withCredentials: true
       })
         .then((res) => setMyPost(res.data))

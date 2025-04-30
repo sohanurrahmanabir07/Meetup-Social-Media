@@ -25,7 +25,7 @@ global.io = new Server(server, {
   }
 });
 
-app.use('/', route)
+app.use('/api', route)
 app.set('scoketio', io)
 connectDB()
 app.use((req, res, next) => {
