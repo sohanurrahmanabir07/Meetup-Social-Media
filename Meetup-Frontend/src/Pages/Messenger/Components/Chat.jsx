@@ -57,7 +57,7 @@ export const Chat = ({ selected, setSelected }) => {
         }
     }, [])
     return (
-        <div className={`border-x-2 dark:bg-[url('assets/images/darkWhatsapp.png')]  dark:  bg-[url(https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png)]    bg-no-repeat bg-cover border-slate-400   w-3/5 px-3  text-center relative`}
+        <div className={`border-x-2 dark:bg-[url('assets/images/darkWhatsapp.png')] max-sm:w-full  dark:  bg-[url(https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png)]    bg-no-repeat bg-cover border-slate-400   w-3/5 px-3  text-center relative`}
         
         
         >

@@ -3,7 +3,7 @@ import { HomeProfile } from "../HomeProfile"
 import { faUser } from "@fortawesome/free-regular-svg-icons"
 
 
-export const SideBar = () => {
+export const SideBar = ({Component}) => {
     return (
         <div className="drawer">
             <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -14,8 +14,7 @@ export const SideBar = () => {
             <div className="drawer-side">
                 <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
                 <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
-                
-                   <HomeProfile></HomeProfile>
+                   {Component}
                 </ul>
             </div>
         </div>

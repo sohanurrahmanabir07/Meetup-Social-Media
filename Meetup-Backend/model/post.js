@@ -7,7 +7,7 @@ const PostSchema = new mongoose.Schema({
         enum: ['status', 'photo'],
         required: true
     },
-    info:{
+    info: {
         type: String,
         default: () => {
             if (this.type == 'photo') {
@@ -31,18 +31,12 @@ const PostSchema = new mongoose.Schema({
             }
         }
     },
-    likes: {
-        type: Number,
-        default: 0
-    },
+    likes: [{ type: Schema.Types.ObjectId, ref:'Users' }],
     comments: [{ type: Schema.Types.ObjectId, ref: 'Comments' }],
     shares: [{ type: Schema.Types.ObjectId, ref: 'Users' }],
 
-    shareMap: {
-        type: Map,
-        of: String
-    },
-   
+    shareMap: [{ type: Schema.Types.ObjectId, ref:'Users' }],
+
     TimeStamp: String
 
 })

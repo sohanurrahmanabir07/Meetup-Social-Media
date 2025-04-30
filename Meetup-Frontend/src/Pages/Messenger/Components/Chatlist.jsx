@@ -25,7 +25,7 @@ export const Chatlist = ({ listChat, selected, setSelected, friends }) => {
 
 
   return (
-    <div className=' dark:bg-slate-950 h-[calc(100vh-60px)] overflow-y-scroll max-sm:w-full w-1/5 p-3 '>
+    <div className=' dark:bg-slate-950 h-[calc(100vh-60px)] overflow-y-scroll max-sm:w-full p-3 '>
       {/* 
 ------------------------Searching---------------------- */}
       <section>

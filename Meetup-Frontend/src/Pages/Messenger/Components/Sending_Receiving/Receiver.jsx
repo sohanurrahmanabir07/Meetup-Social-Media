@@ -18,7 +18,7 @@ export const Receiver = ({ item, user }) => {
                 </div>
 
 
-                <div className="chat-bubble  bg-purple-600  text-white">{item.message}</div>
+                <div className="chat-bubble  bg-purple-950  text-white">{item.message}</div>
                 <time className="text-xs opacity-50">
                     {
                         new Date().toLocaleDateString('en-GB') !== new Date(item.time).toLocaleDateString('en-GB')

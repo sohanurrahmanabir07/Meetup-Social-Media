@@ -7,7 +7,7 @@ import { ProfileIcon } from "./ProfileIcon"
 import { Post } from "./Post"
 import { faGlobe } from "@fortawesome/free-solid-svg-icons"
 
-export const RightSideBar = () => {
+export const RightSideBar = ({Component}) => {
     return (
         <div className="drawer drawer-end w-25">
             <input id="my-drawer-4" type="checkbox" className="drawer-toggle" />
@@ -16,7 +16,7 @@ export const RightSideBar = () => {
                 <label htmlFor="my-drawer-4" aria-label="close sidebar" className="drawer-overlay"></label>
                 <div className="menu bg-base-200 text-base-content min-h-full w-80 p-4">
                    
-                   <RightPortion></RightPortion>
+                    {Component}
 
               
                    

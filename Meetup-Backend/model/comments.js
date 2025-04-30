@@ -10,7 +10,7 @@ const CommentSchema=new mongoose.Schema({
     },
     replies:[{type:Schema.Types.ObjectId,ref:'replies'}],
 
-    Timestamp:String
+    TimeStamp:String
 
 })
 

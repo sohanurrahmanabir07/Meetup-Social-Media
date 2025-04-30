@@ -3,12 +3,12 @@ import { useLocation, useNavigate } from 'react-router'
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import Swal from 'sweetalert2'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addUser } from '../redux/SocialStore'
 import socket from '../Socket/SocketServer'
 
 export const Auth = () => {
-
+    const user = useSelector((state) => state.SocialMedia.users)
     const location = useLocation()
     let type = location.state?.from
 
@@ -110,9 +110,7 @@ export const Auth = () => {
               
 
                     socket.connect()
-                    
-
-
+                
                     dispatch(addUser(res.data.data))
                 }
 
@@ -156,7 +154,7 @@ export const Auth = () => {
     }
 
     return (
-        <div>
+        <div className='w-full h-screen '>
 
 
             <section className=' border-2  w-1/3 rounded-xl p-3 m-auto lg:mt-20'>

@@ -8,7 +8,7 @@ export const HomeFriendList = ({friends}) => {
             <div className="flex space-x-5 space-y-5 flex-wrap">
 
                 {
-                    friends.map((item, index) => {
+                    friends && friends.map((item, index) => {
                         return (
 
                             <div className="max-w-[200px] max-sm:w-[120px] ">

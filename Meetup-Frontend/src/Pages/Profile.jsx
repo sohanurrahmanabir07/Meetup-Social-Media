@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { ProfileIcon } from '../Components/Homer-Component/Components/ProfileIcon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBriefcase, faLocationDot, faPen } from '@fortawesome/free-solid-svg-icons'
+import { faBriefcase, faLocationDot, faPen, faXmark } from '@fortawesome/free-solid-svg-icons'
 import { NewPost } from '../Components/Homer-Component/Components/NewPost'
 import { Post } from '../Components/Homer-Component/Components/Post'
 import { About } from '../Components/Homer-Component/Components/Profile Component/About'
@@ -12,44 +12,155 @@ import { Link, NavLink, useLocation, useSearchParams } from 'react-router'
 import { HomePhotos } from '../Components/Homer-Component/Components/Profile Component/HomePhotos'
 import { HomeFriendList } from '../Components/Homer-Component/Components/Profile Component/HomeFriendList'
 import { useMyPost } from '../CustomHooks/useMyPost'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import { faMessage, faUser } from '@fortawesome/free-regular-svg-icons'
+import socket from '../Socket/SocketServer'
+import { addTo_rqst_pnding_List, remove_rqst_pnding_List } from '../redux/SocialStore'
 
 export const Profile = () => {
 
-    const [active, setActive] = useState('feed')
+    const [active, setActive] = useState(localStorage.getItem('active') || 'feed')
     const location = useLocation()
     const [myPost, setMyPost] = useState(null)
 
     const [totalPost, setTotalPost] = useState(5)
 
     let myProfile = useSelector((state) => state.SocialMedia.users)
-    const [user, setUser] = useState(location.state?.user || myProfile)
+    const dispatch = useDispatch()
+    const pendingSet = new Set(useSelector((state) => state.SocialMedia.pendingSet))
+    const requestSet = new Set(useSelector((state) => state.SocialMedia.requestSet))
+    const pendingList = useSelector((state) => state.SocialMedia.pendingList)
+    const requestList = useSelector((state) => state.SocialMedia.requestList)
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')) || myProfile)
 
-    const myFriend = myProfile.friends
+    const myFriend = myProfile?.friends
 
 
 
     useEffect(() => {
 
         if (location.state?.user) {
-            setUser(location.state.user);
+            localStorage.setItem('profile', JSON.stringify(location.state.user))
+
+
+            setUser(JSON.parse(localStorage.getItem('profile')))
+
         }
-        if(location.state?.feed){
-            setActive('friends')
+        if (location.state?.feed) {
+            localStorage.setItem('active', location.state.feed)
+            setActive(localStorage.getItem('active'))
         }
+
+
+
+
     }, [location.state]);
 
     useEffect(() => {
         if (user?._id) {
-            axios.get(`${import.meta.env.VITE_BACKEND_URL}/mypost?id=${user._id}`, {
+            axios.get(`${import.meta.env.VITE_BACKEND_URL}/mypost?id=${user?._id}`, {
                 withCredentials: true
             })
                 .then((res) => setMyPost(res.data))
                 .catch((err) => console.log(err.message));
         }
     }, [user]);
+
+    useEffect(() => {
+
+        console.log('pending list', pendingList)
+        console.log('pending set', pendingSet)
+
+
+        console.log('Request List', requestList)
+        console.log('Request Set', requestSet)
+        return () => {
+            localStorage.removeItem('profile')
+            localStorage.removeItem('active')
+
+        }
+    }, [])
+
+    const handleRequest_Accept = (v) => {
+
+        const data = {
+            senderID: myProfile?._id,
+            receiverID: JSON.parse(localStorage.getItem('profile'))?._id,
+            type: v,
+            info: null,
+            TimeStamp: JSON.stringify(new Date())
+
+        }
+        let rqst_data = {
+            senderID: myProfile,
+            receiverID: JSON.parse(localStorage.getItem('profile')),
+            pending: true,
+            TimeStamp: JSON.stringify(new Date())
+        }
+        let Info = null
+        if (v == 'requestAccept') {
+            Info = pendingList.find((item) => item.senderID?._id == JSON.parse(localStorage.getItem('profile'))?._id)
+
+
+
+        } else if (v == 'friendRequest') {
+
+
+            dispatch(addTo_rqst_pnding_List({ data: [rqst_data], type: 'rqstList' }))
+
+            const temp = { ...rqst_data }
+
+            temp.senderID = myProfile?._id,
+                temp.receiverID = JSON.parse(localStorage.getItem('profile'))?._id
+            Info = temp
+
+        } else if (v == 'cancelRequest') {
+            Info = requestList.find((item) => item.receiverID?._id == JSON.parse(localStorage.getItem('profile'))?._id)
+            const temp = { ...Info }
+            temp.senderID = Info.senderID._id
+            temp.receiverID = Info.receiverID._id
+            Info = temp
+            if (Info) {
+                dispatch(remove_rqst_pnding_List({ data: JSON.parse(localStorage.getItem('profile'))._id, type: 'rqstList' }))
+            }
+
+        }
+        else {
+            console.log('cancelPending')
+            Info = pendingList.find((item) => item?.senderID?._id == JSON.parse(localStorage.getItem('profile'))?._id)
+            console.log('Info of deleting ',Info)
+
+            if (Info) {
+                const temp = { ...Info }
+                temp.senderID = Info.senderID._id
+                temp.receiverID = Info.receiverID._id
+                Info = temp
+            }
+
+
+            if (Info) {
+                dispatch(remove_rqst_pnding_List({ data: JSON.parse(localStorage.getItem('profile'))._id, type: 'pendingList' }))
+            }
+
+        }
+
+
+
+
+
+
+        if (Info != -1) {
+            data.info = Info
+
+            socket.emit('incoming_notification', data)
+        }
+
+
+
+
+
+    }
 
 
     return (
@@ -92,16 +203,59 @@ export const Profile = () => {
 
 
                         {
-                            ((location.state && (myProfile._id != location.state.user._id))) ?
+                            ((localStorage.getItem('profile') && (myProfile?._id != JSON.parse(localStorage.getItem('profile'))?._id))) ?
 
-                                !(myFriend[location.state.user._id]) ?
+                                !(myFriend[JSON.parse(localStorage.getItem('profile'))?._id]) ?
 
-                                    (
-                                        <div className='flex items-center btn  btn-ghost btn-secondary'  >
-                                            <FontAwesomeIcon icon={faUser} size='lg' > </FontAwesomeIcon>
-                                            <p>Add Friend</p>
-                                        </div>
-                                    )
+
+                                    pendingSet.has(JSON.parse(localStorage.getItem('profile'))?._id) ?
+                                        (
+                                            <section className='flex space-x-2'>
+                                                <div className='flex items-center btn  btn-ghost btn-secondary' onClick={() => handleRequest_Accept('requestAccept')} >
+                                                    <FontAwesomeIcon icon={faUser} size='lg' > </FontAwesomeIcon>
+                                                    <p>Accept Request?</p>
+                                                </div>
+
+                                                <div className='flex items-center btn  btn-ghost btn-secondary' onClick={() => handleRequest_Accept('cancelPending')} >
+                                                    <FontAwesomeIcon icon={faXmark} size='lg' > </FontAwesomeIcon>
+                                                    <p>Delete Request</p>
+                                                </div>
+
+
+                                            </section>
+
+                                        )
+                                        :
+
+                                        requestSet.has(JSON.parse(localStorage.getItem('profile'))?._id) ?
+
+
+
+                                            (
+                                                <div className='flex items-center btn  btn-ghost btn-secondary' onClick={() => handleRequest_Accept('cancelRequest')} >
+                                                    <FontAwesomeIcon icon={faUser} size='lg' > </FontAwesomeIcon>
+                                                    <p>Cancel Request?</p>
+                                                </div>
+                                            )
+
+
+
+                                            :
+
+
+
+
+
+
+                                            (
+                                                <div className='flex items-center btn  btn-ghost btn-secondary' onClick={() => handleRequest_Accept('friendRequest')} >
+                                                    <FontAwesomeIcon icon={faUser} size='lg' > </FontAwesomeIcon>
+                                                    <p>Add Friend</p>
+                                                </div>
+                                            )
+
+
+
 
                                     :
 
@@ -117,10 +271,12 @@ export const Profile = () => {
                                 ''
 
 
+
+
                         }
 
                         {
-                            ((location.state) && (location.state.user._id != myProfile._id)) ?
+                            ((localStorage.getItem('profile')) && (JSON.parse(localStorage.getItem('profile'))?._id != myProfile?._id)) ?
                                 (
                                     < div className='flex items-center btn btn-ghost btn-secondary'>
                                         <FontAwesomeIcon icon={faMessage} size='lg' > </FontAwesomeIcon>
@@ -156,10 +312,10 @@ export const Profile = () => {
                     <div className='px-2'>
 
                         <section role="tablist" className="tabs font-semibold tabs-border border-2 border-slate-500 py-2 border-b-0 border-x-0 ">
-                            <NavLink><a role="tab" className={`tab ${active == `feed` ? `tab-active` : ``}`} onClick={() => setActive('feed')} >Feed</a></NavLink>
-                            <NavLink><a role="tab" className={`tab ${active == `about` ? `tab-active` : ``}`} onClick={() => setActive('about')} >About</a></NavLink>
-                            <NavLink> <a role="tab" className={`tab ${active == `photos` ? `tab-active` : ``}`} onClick={() => setActive('photos')} >Photos</a></NavLink>
-                            <NavLink><a role="tab" className={`tab ${active == `friends` ? `tab-active` : ``}`} onClick={() => setActive('friends')} >Friends</a></NavLink>
+                            <NavLink><p role="tab" className={`tab ${active == `feed` ? `tab-active` : ``}`} onClick={() => setActive('feed')} >Feed</p></NavLink>
+                            <NavLink><p role="tab" className={`tab ${active == `about` ? `tab-active` : ``}`} onClick={() => setActive('about')} >About</p></NavLink>
+                            <NavLink> <p role="tab" className={`tab ${active == `photos` ? `tab-active` : ``}`} onClick={() => setActive('photos')} >Photos</p></NavLink>
+                            <NavLink><p role="tab" className={`tab ${active == `friends` ? `tab-active` : ``}`} onClick={() => setActive('friends')} >Friends</p></NavLink>
 
 
 
@@ -175,7 +331,7 @@ export const Profile = () => {
                         <div className='space-y-10'>
 
                             {
-                                location.state && (location.state.user._id == myProfile._id) ?
+                                localStorage.getItem('profile') && (JSON.parse(localStorage.getItem('profile'))?._id == myProfile?._id) ?
                                     (
                                         <section>
                                             <NewPost></NewPost>
@@ -247,7 +403,7 @@ export const Profile = () => {
                                 (
                                     <div className='max-sm:flex max-sm:justify-center max-sm:items-center '>
 
-                                        <HomeFriendList friends={user?.friendList} ></HomeFriendList>
+                                        <HomeFriendList friends={user.friendList ? user.friendList : ''} ></HomeFriendList>
                                     </div>
                                 )
 

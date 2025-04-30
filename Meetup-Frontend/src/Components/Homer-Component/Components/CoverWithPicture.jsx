@@ -12,7 +12,7 @@ export const CoverWithPicture = () => {
             </div>
 
             <div className='w-full flex items-center justify-center -mt-10'>
-                <ProfileIcon width={24} height={24}></ProfileIcon>
+                <ProfileIcon width={150} height={150}></ProfileIcon>
             </div>
 
             

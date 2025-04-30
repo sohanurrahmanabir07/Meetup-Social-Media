@@ -116,7 +116,7 @@ const SocketEvents = (socket, io) => {
         
         // callback
     
-        ) => {
+) => {
 
 
         socket.join(data.groupID)

@@ -45,7 +45,7 @@ export const SendingBar = ({ selected, setSelected,messages,setMessages }) => {
 
 
   return (
-    <div className=' bg-purple-600 absolute bottom-2 right-0 w-full text-whiteh-1/7 p-2 rounded-lg'>
+    <div className=' bg-purple-950 absolute bottom-2 right-0 w-full text-white  p-2 rounded-lg'>
 
       {/* <form action="" onSubmit={messagField!=''? handleSend:null}>
 

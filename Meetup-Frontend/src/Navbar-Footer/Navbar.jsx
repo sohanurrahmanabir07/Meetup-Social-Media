@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ThemeController } from './NavbarTools/ThemeController'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFacebookMessenger } from '@fortawesome/free-brands-svg-icons'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { removeUser } from '../redux/SocialStore'
+import { addNotification, addTo_rqst_pnding_List, removeUser, update_rqst_pending } from '../redux/SocialStore'
 import socket from '../Socket/SocketServer'
 import { faBell } from '@fortawesome/free-regular-svg-icons'
 import { NotificationInfo } from './NavbarTools/NotificationInfo'
@@ -21,32 +21,61 @@ export const Navbar = () => {
     let allUsers = useGetUser()
 
     const [search, setSearch] = useState('')
+    const [unreadCount, setUnreadCount] = useState(0)
 
+    const notification = useSelector((state) => state.SocialMedia.notification)
+    const requestSet=useSelector((state) => state.SocialMedia.pendingList)
 
     const handleChange = (e) => {
         setSearch(e.target.value)
 
     }
 
+    // useEffect(() => {
+    //     socket.on('getNotification', (data) => {
+    //         console.log('got the notification', data)
+    //         dispatch(addNotification(data))
+    //     })
+    // }, [])
+
+    useEffect(() => {
+
+
+        const cnt = notification?.filter((item) => item.read === false || item.read === 'false').length
+        setUnreadCount(cnt)
+
+    }, [notification])
+
     const filterUser = allUsers?.filter((item) => item['name'].toLowerCase().includes(search.toLowerCase()))
 
+    useEffect(() => {
 
+        socket.on('updateRqstPendingList', (result) => {
+
+            console.log(result,'=' ,result.data)
+
+
+            dispatch(update_rqst_pending({ data: result.data, type: result.type }))
+
+        })
+
+    }, [])
 
 
     return (
-        <div className='bg-primary-content'>
+        <div className=' dark:bg-slate-950 bg-purple-950 text-gray-300 '>
 
 
-            <div className="navbar  flex justify-between  lg:max-w-[1500px] lg:m-auto ">
+            <div className="navbar  flex justify-between  lg:max-w-[1340px] lg:m-auto ">
                 <div className="cursor-pointer" onClick={() => navigate('/home')} >
                     <a className="text-2xl">Meetup🔥</a>
                 </div>
                 {/* searching box */}
 
                 {user && (
-                    <section className='w-4/10 relative max-sm:hidden'>
+                    <section className='w-4/10 relative max-sm:hidden '>
 
-                        <label className="input  w-full focus:outline-none" >
+                        <label className="input  w-full text-slate-950 focus:outline-none dark:text-gray-300" >
                             <svg className="h-[1em] opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <g
                                     strokeLinejoin="round"
@@ -59,7 +88,7 @@ export const Navbar = () => {
                                     <path d="m21 21-4.3-4.3"></path>
                                 </g>
                             </svg>
-                            <input type="search" onChange={handleChange} value={search} className="grow focus:outline-none broder-3 border-slate-700" placeholder="Search" />
+                            <input type="search" onChange={handleChange} value={search} className="grow  dark:text-gray-300  text-slate-900 focus:outline-none broder-3 border-slate-700" placeholder="Search" />
 
                         </label>
                         <div className='absolute w-full rounded-md bg-white font-semibold text-lg list-none '>
@@ -74,9 +103,9 @@ export const Navbar = () => {
 
 
 
-                                        }} className='flex space-x-3 cursor-pointer items-center hover:bg-purple-900 hover:text-white p-2'>
+                                        }} className='flex space-x-3 cursor-pointer items-center hover:bg-purple-900 hover:text-white p-2' key={index} >
                                             <ProfileIcon width={10} height={10}></ProfileIcon>
-                                            <li key={index} >{item?.name}</li>
+                                            <li >{item?.name}  </li>
                                         </div>
 
                                     )
@@ -112,12 +141,14 @@ export const Navbar = () => {
                     {
                         user ?
 
-                            (<div className="dropdown dropdown-center cursot-pointer">
+                            (<div className="dropdown dropdown-center cursot-pointer relative">
 
                                 <FontAwesomeIcon tabIndex={0} icon={faBell} size='lg' className='cursor-pointer' ></FontAwesomeIcon>
                                 <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 lg:w-[400px] max-sm:w-52 p-2 shadow-sm md:w-52">
-                                    <NotificationInfo></NotificationInfo>
+                                    <NotificationInfo unreadCount={unreadCount} setUnreadCount={setUnreadCount}></NotificationInfo>
+
                                 </ul>
+                                <p className='absolute -top-2 -right-2 bg-blue-600 text-gray-200 rounded-full text-xs w-4 h-4 text-center  '>{unreadCount}</p>
                             </div>)
                             :
 

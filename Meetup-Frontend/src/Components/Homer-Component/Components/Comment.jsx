@@ -1,7 +1,9 @@
+import { DateTime } from "./DateTime"
 import { ProfileIcon } from "./ProfileIcon"
 
 
 export const Comment = ({comment}) => {
+    console.log('comment',comment)
     return (
         <section className="flex space-x-2 ">
             <ProfileIcon width={12} height={12} ></ProfileIcon>
@@ -10,7 +12,7 @@ export const Comment = ({comment}) => {
                 <div className="flex justify-between">
                     <p className="text-base font-semibold">{comment?.userID['name']}</p>
 
-                    <p className="text-sm text-gray-500">21 Hours Ago</p>
+                    <p className="text-sm text-gray-500">{<DateTime item={comment}  ></DateTime>}</p>
                 </div>
 
                 <div>

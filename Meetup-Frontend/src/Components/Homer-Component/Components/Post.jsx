@@ -1,23 +1,23 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ProfileIcon } from "./ProfileIcon"
-import { faComment, faThumbsUp } from "@fortawesome/free-regular-svg-icons"
+import { faComment, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { faShare } from "@fortawesome/free-solid-svg-icons"
 import { SendingBox } from '../../../Pages/Messenger/Components/SendingBox'
 import { Comment } from "./Comment"
 import { useState } from "react"
 import socket from "../../../Socket/SocketServer"
 import { useSelector } from "react-redux"
-import { comment } from "postcss"
+import { DateTime } from "./DateTime"
 
-export const Post = ({ item }) => {
+
+export const Post = ({ item, HandleLike }) => {
     const [totalComment, setTotalComment] = useState(4)
     const [messagField, setMessageField] = useState('')
     const [showComments, setShowComments] = useState(false)
     const user = useSelector((state) => state.SocialMedia.users)
+
+    const LikeList = new Set(item.likes)
     const handleLike = () => {
-
-
-
         const data = {
             senderID: user._id,
             receiverID: item.userID._id,
@@ -26,8 +26,6 @@ export const Post = ({ item }) => {
             TimeStamp: new Date()
 
         }
-
-
         socket.emit('incoming_notification', data)
     }
 
@@ -38,6 +36,7 @@ export const Post = ({ item }) => {
             userID: user._id,
             comment: messagField,
             postID: item._id,
+            TimeStamp: new Date()
         }
 
         const data = {
@@ -60,19 +59,19 @@ export const Post = ({ item }) => {
 
     if (item) {
         return (
-            <div className="space-y-2 p-5 max-sm:p-2 border-2 my-3 border-slate-400 rounded-md w-90/100  max-sm:w-full">
+            <div className="space-y-2 p-5 max-sm:p-2  dark:bg-slate-950 dark:text-gray-300 border-1 my-3 border-slate-400 rounded-md w-90/100  max-sm:w-full">
 
                 <section className="flex space-x-2">
                     <ProfileIcon width={12} height={12} ></ProfileIcon>
                     <div>
-                        <p className="text-lg font-semibold"> {item.userID['name']}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >21 Hours Ago</span> </p>
+                        <p className="text-lg font-semibold"> {item.userID['name']}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >{<DateTime item={item} ></DateTime>}</span> </p>
                         <p className="text-sm">Software Engineer at Google</p>
                     </div>
 
                 </section>
                 {/* _____________Caption________________ */}
                 <section>
-                    <p className="text-base font-semibold text-gray-600">
+                    <p className="text-base font-semibold">
 
                         {
 
@@ -100,8 +99,9 @@ export const Post = ({ item }) => {
                 <section className="flex justify-between items-center">
 
                     <div className="flex space-x-2">
-                        <p className="text-base" onClick={handleLike} >
-                            <FontAwesomeIcon icon={faThumbsUp} className=" cursor-pointer" size="lg" ></FontAwesomeIcon> ({item?.likes})
+                        <p className="text-base" onClick={() => HandleLike(item)} >
+                            <FontAwesomeIcon icon={faThumbsUp} className={` cursor-pointer  ${LikeList.has(user._id) ? `text-blue-500` : ``} `} size="lg" ></FontAwesomeIcon> ({item?.likes?.length})
+
                         </p>
                         <p className="text-base">
                             <FontAwesomeIcon icon={faComment} className="cursor-pointer"  ></FontAwesomeIcon> ({item['comments']?.length})
@@ -117,14 +117,14 @@ export const Post = ({ item }) => {
 
                 <section className="flex items-center">
                     <ProfileIcon width={12} height={12}></ProfileIcon>
-                    <div className="bg-purple-500  w-full h-50/100 text-white   p-1 rounded-lg">
+                    <div className="bg-purple-950  w-full h-50/100 text-white rounded-lg">
                         <SendingBox messagField={messagField} setMessageField={setMessageField} handleSend={handleSend} ></SendingBox>
                     </div>
                 </section>
                 <section className="lg:ml-10 max-sm:ml-3 w-full space-y-4 duration-300 ease-in">
 
                     {
-                       showComments &&  item?.comments?.slice(0, totalComment).map((comment, index) => {
+                        showComments && item?.comments?.slice(0, totalComment).map((comment, index) => {
 
                             return (
                                 <Comment key={index} comment={comment}></Comment>
@@ -147,20 +147,22 @@ export const Post = ({ item }) => {
                                     <button className="btn btn-ghost btn-secondary" onClick={() => setTotalComment((prev) => prev - 4)} >....Load Less</button>
                                 </div>
                             )
+
                             :
+
                             ''
                     }
                     {
-                       item?.comments?.length!=0? showComments ?
+                        item?.comments?.length != 0 ? showComments ?
                             (
                                 <div className="text-center">
-                                    <button className="btn btn-ghost btn-secondary" onClick={() =>setShowComments(!showComments)} >Hide Comments</button>
+                                    <button className="btn btn-ghost btn-secondary" onClick={() => setShowComments(!showComments)} >Hide Comments</button>
                                 </div>
 
                             )
                             :
-                            ( <div className="text-center">
-                                <button className="btn btn-ghost btn-secondary" onClick={() =>setShowComments(!showComments)} >Show Comments</button>
+                            (<div className="text-center">
+                                <button className="btn btn-ghost btn-secondary" onClick={() => setShowComments(!showComments)} >Show Comments</button>
                             </div>)
                             :
                             ''

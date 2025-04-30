@@ -7,11 +7,13 @@ import { RightSideBar } from '../Components/Homer-Component/Components/RightSide
 import socket from '../Socket/SocketServer'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNotifactions } from '../CustomHooks/useNotifactions'
-import { addNotification, loadNotification } from '../redux/SocialStore'
+import { addNotification, getPendingList, getRequestList, loadNotification } from '../redux/SocialStore'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 export const Home = () => {
   const user = useSelector((state) => state.SocialMedia.users)
- 
+
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -19,7 +21,8 @@ export const Home = () => {
       socket.connect();
       socket.emit('join-user', { userID: user._id });
 
-      socket.on('getNotificaion',(data)=>{
+      socket.on('getNotification', (data) => {
+        // console.log('got the notification',data)
         dispatch(addNotification(data))
       })
     }
@@ -28,17 +31,38 @@ export const Home = () => {
   const notification = user && useNotifactions(user._id)
 
   useEffect(() => {
+    if (user) {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/getRequestPendingList?id=${user._id}`)
+        .then((res) => {
+          // console.log(res.data)
+          // console.log(res.data.pendingList)
+          dispatch(getRequestList(res.data.requestList))
+          dispatch(getPendingList(res.data.pendingList))
+        })
+        .catch((err) => Swal.fire({
+          title: 'error',
+          text: `${err.message}`,
+          icon: 'error'
+
+        }))
+    }
+
+  
+
+  }, [])
+
+  useEffect(() => {
     dispatch(loadNotification(notification))
   }, [notification])
   return (
-    <div className='text-3xl lg:max-w-[1500px] lg:m-auto'>
+    <div className='text-3xl lg:max-w-[1340px] lg:m-auto'>
 
       <div className='md:hidden my-5 flex justify-between'>
-        <SideBar></SideBar>
-        <RightSideBar></RightSideBar>
+        <SideBar Component={<HomeProfile></HomeProfile>} ></SideBar>
+        <RightSideBar Component={<RightPortion></RightPortion>} ></RightSideBar>
       </div>
 
-      <div className='flex lg:space-5 max-sm:flex-col'>
+      <div className='flex lg:space-5 max-sm:flex-col mt-5'>
 
         <section className='w-20/100 lg:h-[500px] max-sm:hidden'>
           <HomeProfile></HomeProfile>

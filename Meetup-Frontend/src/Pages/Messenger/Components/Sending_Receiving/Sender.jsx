@@ -17,7 +17,7 @@ export const Sender = ({ item, user }) => {
                 {user.name}
 
             </div>
-            <div className="chat-bubble  bg-purple-600  text-white">{item.message}</div>
+            <div className="chat-bubble  bg-purple-800  text-white">{item.message}</div>
             <time className="text-xs opacity-50">
                 {
                     new Date().toLocaleDateString('en-GB') !== new Date(item.time).toLocaleDateString('en-GB')

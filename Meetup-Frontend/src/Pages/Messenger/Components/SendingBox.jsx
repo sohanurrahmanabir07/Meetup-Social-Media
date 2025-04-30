@@ -27,9 +27,9 @@ export const SendingBox = ({ selected, setSelected,messages,setMessages ,user,me
                 ></textarea>
 
 
-                <button>
+                <button disabled={messagField==''? true : false}  >
 
-                    <FontAwesomeIcon className={`cursor-pointer ml-4 w-4 ${!messagField ? 'text-gray-400  cursor-not-allowed' : ''} `} icon={faPaperPlane} ></FontAwesomeIcon>
+                    <FontAwesomeIcon icon={faPaperPlane} className={`cursor-pointer ml-4 w-4 ${messagField=='' ? 'text-gray-400  cursor-none' : ''} `} size="xs" ></FontAwesomeIcon>
                 </button>
 
 

@@ -3,6 +3,7 @@ const cloudinary = require("../Cloudinary/cloudinary")
 const { Notification } = require("../model/notification")
 const { model } = require("mongoose")
 const Users = require("../model/user")
+const { FriendRequst } = require("../model/freindRequest")
 const fetchPost = async (req, res) => {
 
     try {
@@ -18,7 +19,7 @@ const fetchPost = async (req, res) => {
         // const result = await Posts.find({ userID: { $in: friends } }).populate('userID').populate('comments').skip((page - 1) * 2).limit(10)
         const result = await Posts.find({ userID: { $in: friends } }).populate('userID').populate({
             path: 'comments',
-            options: { sort: { 'Timestamp': -1 } },
+            options: { sort: { 'TimeStamp': -1 } },
             populate: {
                 path: 'userID',
                 model: 'Users'
@@ -37,11 +38,11 @@ const fetchPost = async (req, res) => {
 }
 
 const myPost = async (req, res) => {
-    const  {id}  = req.query
+    const { id } = req.query
     const page = 1
 
     try {
-        const posts = await Posts.find({userID:id}).populate('userID').populate({
+        const posts = await Posts.find({ userID: id }).populate('userID').populate({
             path: 'comments',
             options: { sort: { 'Timestamp': -1 } },
             populate: {
@@ -52,7 +53,7 @@ const myPost = async (req, res) => {
 
         if (posts) {
             res.status(201).send(posts)
-        }else{
+        } else {
             res.send('Couldnt find')
         }
 
@@ -101,7 +102,7 @@ const doPost = async (req, res) => {
     try {
         const save = await post.save()
         if (save) {
-            const finalData=await Posts.findById(save._id).populate('userID').populate({
+            const finalData = await Posts.findById(save._id).populate('userID').populate({
                 path: 'comments',
                 options: { sort: { 'Timestamp': -1 } },
                 populate: {
@@ -110,7 +111,7 @@ const doPost = async (req, res) => {
                 }
             })
 
-            if(finalData){
+            if (finalData) {
 
             }
             res.status(201).send(finalData)
@@ -120,17 +121,17 @@ const doPost = async (req, res) => {
     }
 }
 
-const getUSer=async(req,res)=>{
+const getUSer = async (req, res) => {
     try {
-        const users=await Users.find().select({'password':0,'chatHistory':0,}).populate('friendList')
+        const users = await Users.find().select({ 'password': 0, 'chatHistory': 0, }).populate('friendList')
 
-        if(users){
+        if (users) {
             res.status(201).send(users)
-        }else{
+        } else {
             res.status(401).send('couldnot Find')
         }
     } catch (error) {
-        
+
     }
 }
 
@@ -152,7 +153,7 @@ const loadNotification = async (req, res) => {
     const { id, l, p } = req.query
     try {
         const page = parseInt(p)
-        const result = await Notification.find({ receiverID: id }).populate('senderID').skip((page - 1) * 10).limit(parseInt(l))
+        const result = await Notification.find({ receiverID: id }).sort({TimeStamp:-1}).populate('senderID').skip((page - 1) * 10).limit(parseInt(l))
         if (result) {
             res.status(201).send(result)
         } else {
@@ -167,7 +168,56 @@ const loadNotification = async (req, res) => {
 
 }
 
+const loadRequestandPendingList = async (req, res) => {
+    const { id } = req.query
+
+    try {
+        const friendRequest = await FriendRequst.find({ senderID: id ,pending:true}).populate('senderID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).populate('receiverID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).lean()
+
+        const pendingRequest = await FriendRequst.find({ receiverID: id,pending:true }).populate('senderID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).populate('receiverID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).lean()
+
+
+        res.status(201).send({
+            'requestList': friendRequest,
+            'pendingList': pendingRequest
+        })
+    } catch (error) {
+        res.status(401).send(error.message)
+    }
+
+
+
+
+
+}
+
+const markReadNotification = async (req, res) => {
+    const { id } = req.body
+    try {
+        const updateNotification = await Notification.updateOne({ _id: id }, { read: true })
+
+        if (updateNotification) {
+            res.status(201).send('Updated')
+        }else{
+            res.status(401).send('Couldnt Found')
+        }
+
+    } catch (error) {
+        res.send(error)
+    }
+
+
+}
+
+const DeleteCollection = async (req, res) => {
+    // const collection = req.query.collection
+    const result = await Notification.deleteMany({type:'dislike'})
+    res.send(result)
+
+}
+
+
 
 module.exports = {
-    fetchPost, doPost, fileUpload, loadNotification,myPost,getUSer
+    fetchPost, doPost, fileUpload, loadNotification, myPost, getUSer, DeleteCollection, loadRequestandPendingList,markReadNotification
 }

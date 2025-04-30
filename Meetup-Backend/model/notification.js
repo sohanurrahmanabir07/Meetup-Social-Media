@@ -5,10 +5,14 @@ const NotificationSchema=new mongoose.Schema({
     receiverID:{type: Schema.Types.ObjectId, ref:'Users'},
     type:{
         type:String,
-        enum:['friendRequest','requestAccept','like','comment']
+        enum:['friendRequest','requestAccept','like','comment','dislike','cancelRequest','cancelPending']
     },
     info:Schema.Types.Mixed,
-    Timestamp:String
+    TimeStamp:String,
+    read:{
+        type:Boolean,
+        default:false
+    }
 })
 
 const Notification=mongoose.model('Notifications',NotificationSchema)

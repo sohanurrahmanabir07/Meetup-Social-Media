@@ -2,7 +2,7 @@ const express=require('express')
 const route=express.Router()
 const {show,createGroup,loadMessage,chatList,practice}=require('../controller/messengerController')
 const {registration,Login}=require('../controller/authController')
-const { fetchPost, doPost, fileUpload, loadNotification, myPost, getUSer } = require('../controller/socialController')
+const { fetchPost, doPost, fileUpload, loadNotification, myPost, getUSer, DeleteCollection, loadRequestandPendingList, markReadNotification } = require('../controller/socialController')
 
 const upload = require('../Middleware/FileHandling/multer')
 
@@ -35,5 +35,8 @@ route.get('/getUsers',getUSer)
 
 route.post('/sendFile',upload.single('image'),fileUpload)
 route.get('/notification',loadNotification)
+route.get('/getRequestPendingList',loadRequestandPendingList)
+route.get('/deleteDocument',DeleteCollection)
+route.post('/markReadNotification',markReadNotification)
 
 module.exports=route

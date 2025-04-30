@@ -1,4 +1,10 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+*{
+    font-family: Arial, Helvetica, sans-serif;
+}
+.dark{
+    background-color: blue;
+}
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));

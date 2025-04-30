@@ -1,12 +1,9 @@
-import { StrictMode } from 'react'
+import { StrictMode, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router'
 import { Root } from './Pages/Root.jsx'
-
 import { Messenger } from './Pages/Messenger/Messenger.jsx'
-import { MessagesHistory } from './Pages/Messenger/Components/MessagesHistory.jsx'
-import { Chatlist } from './Pages/Messenger/Components/Chatlist.jsx'
 import { Auth } from './Pages/Auth.jsx'
 import { persistor, store } from './redux/store.js'
 import { PersistGate } from 'redux-persist/integration/react'
@@ -14,6 +11,10 @@ import { Provider } from 'react-redux'
 import { Profile } from './Pages/Profile.jsx'
 import { Home } from './Pages/Home.jsx'
 import { ProtectiveRoute } from './Components/ProtectiveRoute.jsx'
+import { LandingPage } from './Pages/LandingPage.jsx'
+
+
+
 
 const size = screen.width
 const router = createBrowserRouter([
@@ -21,18 +22,23 @@ const router = createBrowserRouter([
     path: "/",
     element: <Root></Root>,
     children: [
+
+      {
+        path:'/',
+        element:<LandingPage></LandingPage>
+      },
       {
         path: "/home",
         element: <ProtectiveRoute><Home></Home></ProtectiveRoute> 
       },
       {
-        element:<Messenger></Messenger>,
+        element:<ProtectiveRoute><Messenger></Messenger></ProtectiveRoute>,
         path: '/msg'
 
       },
       {
-        element:<Profile></Profile>,
-        path:'/profil'
+        element: <ProtectiveRoute><Profile></Profile></ProtectiveRoute>,
+        path:'/profile'
       },
      
       {

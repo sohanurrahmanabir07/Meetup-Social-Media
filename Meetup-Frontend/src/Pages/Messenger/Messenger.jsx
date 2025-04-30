@@ -9,12 +9,15 @@ import socket from '../../Socket/SocketServer'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import DarkWhatsapp from './darkWhatsapp.png'
+import { useLocation } from 'react-router'
+import { SideBar } from '../../Components/Homer-Component/Components/SideBar'
+import { RightSideBar } from '../../Components/Homer-Component/Components/RightSideBar'
 
 export const Messenger = () => {
 
     const user = useSelector((state) => state.SocialMedia.users)
-
-    const [selected, setSelected] = useState(null)
+    const location = useLocation()
+    const [selected, setSelected] = useState(location.state?.selected || null)
     const [friendInfo, setFriendInfo] = useState(null)
     const [listChat, setListChat] = useState({})
     const [onlineUser, setOnlineUser] = useState(null)
@@ -178,43 +181,77 @@ export const Messenger = () => {
     return (
 
 
+        <section>
+
+            {/* {
+                friendInfo && onlineUser ?
+                    (<div className='md:hidden my-5 flex justify-between'>
+                        <SideBar Component={<Chatlist listChat={listChat} selected={selected} friends={friendInfo} user={user} setSelected={setSelected}  ></Chatlist>} friendInfo={friendInfo} ></SideBar>
+                        <RightSideBar Component={<Online onlineUser={onlineUser} friendInfo={friendInfo} selected={selected} setSelected={setSelected}></Online>}  onlineUser={onlineUser} ></RightSideBar>
+                    </div>)
+                    :
+                    ''
+            } */}
+
+            <div className='flex w-full md:max-w-[1500px] md:m-auto' >
 
 
 
-        <div className='flex w-full md:max-w-[1500px] md:m-auto' >
+
+                {friendInfo ?
+                    <div className='max-sm:hidden'>
+                        <Chatlist listChat={listChat} selected={selected} friends={friendInfo} user={user} setSelected={setSelected} ></Chatlist>
+                    </div>
+                    
+
+                    :
+
+                    (
+                        <div className=' dark:bg-slate-950 h-[calc(100vh-60px)] overflow-y-scroll max-sm:w-full text-center w-1/5 p-3 '>
+
+                            <p className='text-3xl pt-1/2 font-semibold'>Loading ...</p>
+                        </div>
+                    )
+                }
 
 
+                {selected ?
+                    <Chat selected={selected} setSelected={setSelected} ></Chat>
 
-            {friendInfo && <Chatlist listChat={listChat} selected={selected} friends={friendInfo} user={user} setSelected={setSelected} ></Chatlist>}
+                    :
 
+                    <div className={`border-x-2 dark:bg-[url('assets/images/darkWhatsapp.png')]    bg-[url(https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png)]    bg-no-repeat bg-cover bg-center border-slate-400   w-3/5 px-3  text-center`}>
 
-            {selected ?
-                <Chat selected={selected} setSelected={setSelected} ></Chat>
+                        <p className='md:font-bold md:text-3xl  md:dark:text-5xl mt-[200px]'>...No Chat Selected....</p>
 
-                :
+                    </div> 
 
-                <div className={`border-x-2 dark:bg-[url('assets/images/darkWhatsapp.png')]    bg-[url(https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png)]    bg-no-repeat bg-cover bg-center border-slate-400   w-3/5 px-3  text-center`}>
+                }
 
-                    <p className='md:font-bold md:text-3xl  md:dark:text-5xl mt-[200px]'>...No Chat Selected....</p>
+                {onlineUser && friendInfo ?
+                    <div className=' h-[calc(100vh-60px)] max-sm:hidden dark:bg-slate-950 dark:text-gray-300 w-1/5 p-2'>
+                        <Online onlineUser={onlineUser} friendInfo={friendInfo} selected={selected} setSelected={setSelected} ></Online>
+                    </div>
+                    :
+                    <div className='max-sm:hidden'>
 
-                </div>
+                        <p className='text-3xl py-10 font-semibold'>Loading ...</p>
+                    </div>
+                }
 
-            }
-
-            {onlineUser && friendInfo ? <Online onlineUser={onlineUser} friendInfo={friendInfo} selected={selected} setSelected={setSelected} ></Online> : <>
-
-                <p>Loading ...</p>
-            </>
-            }
-
-            {/* 
+                {/* 
             <img src={DarkWhatsapp} alt="" /> */}
 
 
 
 
 
-        </div>
+            </div>
+
+        </section>
+
+
+
 
 
     )

@@ -19,8 +19,7 @@ export const NewPost = () => {
         info: '',
         caption: '',
         imageUrl: '',
-        shareMap: {},
-        // TimeStamp: new Date()
+        TimeStamp: new Date()
     })
 
     const handleClick = (v) => {
@@ -138,7 +137,7 @@ export const NewPost = () => {
 
 
     return (
-        <div className="space-y-2 p-5 border-2 border-slate-500 rounded-md w-90/100 max-sm:w-full">
+        <div className="space-y-2 p-5 dark:bg-slate-950 dark:text-gray-300 border-1 border-slate-500 rounded-md w-90/100 max-sm:w-full">
 
             <form action="" onSubmit={handleSubmit} >
 

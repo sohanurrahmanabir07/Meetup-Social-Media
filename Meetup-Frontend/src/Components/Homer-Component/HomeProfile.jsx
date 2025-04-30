@@ -10,7 +10,7 @@ export const HomeProfile = () => {
     const navigate = useNavigate()
     const user=useSelector(state=>state.SocialMedia.users)
     return (
-        <div>
+        <div  className=' dark:bg-slate-950 dark:text-gray-300 pb-3 text-gray-700 rounded-md'>
 
             <CoverWithPicture></CoverWithPicture>
 

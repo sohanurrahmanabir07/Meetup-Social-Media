@@ -118,3 +118,41 @@ and latest posts will be sent to the users friends as well as users.
 
 
 when a user send friend request, it goes through restAPI and then it saves the notification to database, if it is successful, it comes back to frontend part and a event emits containing the notification 
+
+
+
+
+
+
+
+
+
+
+
+<!-- Like Handling Architect------------------- -->
+
+firstly i will like the post, it  will increase the value from the frontend means it will look up  to its object data , if it has my id or not, then it will send to backend and backend will also perform the same and then, will add my id or remove it, then bring the updated value and place it ,
+
+
+
+
+<!-- Friend Request Architect---------------------------------> -->
+
+intially i will have two data set , one is friend request sent, another is friend request pending ,
+
+basically i will fetch data on the basis of senderID is mine (this will be friend request sent), and receiver id mine ( this is wll be friend request pending ), when i go to a profile and on the basis of two array, it will decide either Add friend , Confirm Request -(cancel request also present).
+
+<!-- Clicking on Add Friend-> -->
+
+when a user click on add friend, instantly that users data will go to Request Sent data Array and then, it will go as notification to Server, and there on the Friend Request Collection data will be saved and returend to my Frontend side and will be stored to Request Sent data, on the other Hand, notification will be sent to that User and , From Notification part, friend request part will be extracted and then that portion will be saved to the pending portion,
+
+
+
+
+<!-- Clicking Accept Request---------------> -->
+
+When a user accept a request, first it goes to the pending Array and finds the data, after getting the data, it takes to the server and there, pending updated to true and then it sends to the Requester with notifaction, there, socket.on(getNotification) takes the notification and extracts the info and when it sees that it is accepting case, it immediatly adds the user info to the friend list, and removes the pending part.
+
+the person who accepts the request also get the notification,From the info when it finds out that, type accept and sender is the user1, then from request sent list, the data got deleted and added to friend list,
+
+when user2 sees that inside info it is accepting and reciever part is mine so, pending list the data get deleted and user added to the friend List,
