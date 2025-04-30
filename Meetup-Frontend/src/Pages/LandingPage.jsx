@@ -6,6 +6,7 @@ import RealTimeChat from '../assets/images/Landing-Page/RealTime Chat.png'
 import FriendRequest from '../assets/images/Landing-Page/bFriend Reequest.webp'
 import { Hero } from './LandingPage Components/Hero'
 import { faBullseye } from '@fortawesome/free-solid-svg-icons'
+import { StepToUse } from './LandingPage Components/StepToUse/StepToUse'
 
 export const LandingPage = () => {
 
@@ -162,6 +163,11 @@ export const LandingPage = () => {
 
             <section className='my-20 text-center'>
                 <p className='font-semibold text-5xl'>How to get Started with <span className='text-orange-500'>M</span>eetup🔥</p>
+            </section>
+
+
+            <section>
+                <StepToUse></StepToUse>
             </section>
 
 
