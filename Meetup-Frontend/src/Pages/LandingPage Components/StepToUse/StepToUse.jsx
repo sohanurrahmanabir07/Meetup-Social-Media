@@ -78,10 +78,10 @@ export const StepToUse = () => {
                     </div>
                     <TimeLineMiddle></TimeLineMiddle>
 
-                    <hr />
+                    <hr className="bg-gray-200" />
                 </li>
                 <li>
-                    <hr />
+                <hr className="bg-gray-200" />
                     <TimeLineMiddle></TimeLineMiddle>
 
                     <div className="timeline-end timeline-box">
@@ -89,20 +89,20 @@ export const StepToUse = () => {
                         <Content img={AddFreind} content={Content2}  ></Content>
 
                     </div>
-                    <hr />
+                    <hr className="bg-gray-200" />
                 </li>
                 <li>
-                    <hr />
+                <hr className="bg-gray-200" />
                     <div className="timeline-start timeline-box">
 
                         <Content img={Comment} content={Content3}  ></Content>
 
                     </div>
                     <TimeLineMiddle></TimeLineMiddle>
-                    <hr />
+                    <hr className="bg-gray-200" />
                 </li>
                 <li>
-                    <hr />
+                <hr className="bg-gray-200" />
                     <TimeLineMiddle></TimeLineMiddle>
                     <div className="timeline-end timeline-box">
 
@@ -110,33 +110,31 @@ export const StepToUse = () => {
 
                     </div>
 
-                    <hr />
+                    <hr className="bg-gray-200" />
                 </li>
                 <li>
-                    <hr />
+                <hr className="bg-gray-200" />
                     <div className="timeline-start timeline-box">
 
                         <Content img={SendMessage} content={Content5}  ></Content>
 
                     </div>
                     <TimeLineMiddle></TimeLineMiddle>
-                    <hr />
+                    <hr className="bg-gray-200" />
                 </li>
                 <li>
-                    <hr />
-
+                <hr className="bg-gray-200" />
                     <TimeLineMiddle></TimeLineMiddle>
                     <div className="timeline-end timeline-box">
 
                         <Content img={GroupChat} content={Content6}  ></Content>
 
                     </div>
-                    <hr />
+                    <hr className="bg-gray-200" />
                 </li>
 
                 <li>
-                    <hr />
-
+                <hr className="bg-gray-200"  />
                     <TimeLineMiddle></TimeLineMiddle>
                     <div className="timeline-start timeline-box">
 

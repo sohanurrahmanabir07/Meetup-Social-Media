@@ -12,13 +12,13 @@ export const Auth = () => {
     const location = useLocation()
     let type = location.state?.from
 
-    if(!type){
-        type='signin'
+    if (!type) {
+        type = 'signin'
     }
 
-    const dispatch=useDispatch()
+    const dispatch = useDispatch()
 
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     let [formData, setFormData] = useState({
         'name': '',
@@ -107,10 +107,10 @@ export const Auth = () => {
                         icon: "success"
                     })
 
-              
+
 
                     socket.connect()
-                
+
                     dispatch(addUser(res.data.data))
                 }
 
@@ -154,44 +154,58 @@ export const Auth = () => {
     }
 
     return (
-        <div className='w-full h-screen '>
+        <div className='w-full h-screen md:flex md:items-center md:justify-center max-sm:px-10 '>
 
 
-            <section className=' border-2  w-1/3 rounded-xl p-3 m-auto lg:mt-20'>
+            <section className=' border-2 md:w-1/3 max-sm:w-full rounded-xl p-3 max-sm:mt-20'>
 
                 <h3 className="font-bold text-lg text-center">{title}</h3>
-                <form method="dialog" className='flex flex-col items-center space-y-3 py-3' onSubmit={handleSubmit}>
+                <form method="dialog" className='flex flex-col  space-y-3 py-3' onSubmit={handleSubmit}>
 
                     {type == 'signup' ? (<>
-                        <p className='font-semibold'>Name</p>
-                        <input type="text" name="name" className='w-3/4 rounded-md border-base-300 outline-2' onChange={handleForm} value={formData.name} />
+
+
+                        <label className="label">Name</label>
+                        <input required type="text" className="input w-full" name="name" placeholder="Enter Your Name" onChange={handleForm} value={formData.name} />
                     </>) : ''}
 
 
                     {type == 'signup' ? (<>
-                        <p className='font-semibold'>Email</p>
-                        <input type="text" name="email" className='w-3/4 rounded-md border-base-300 outline-2' onChange={handleForm} value={formData.email} />
+
+
+                        <label className="label">Email</label>
+                        <input required type="email" className="input w-full" name="email" placeholder="Enter Your Email" onChange={handleForm} value={formData.email} />
                     </>) : ''}
 
-                    
+
                     {type == 'signup' ?
                         <>
-                            <p className='font-semibold'>Address</p>
-                            <input type="text" name="address" className='w-3/4 rounded-md border-base-300 outline-2' onChange={handleForm} value={formData.address} />
+
+                            <label className="label">Address</label>
+                            <input required type="text" className="input w-full" name="address" placeholder="Enter Your Address" onChange={handleForm} value={formData.address} />
                         </> : ''}
                     {type == 'signup' || 'signin' ?
                         <>
-                            <p className='font-semibold'>Phone</p>
-                            <input type="text" name="phone" className='w-3/4 rounded-md border-base-300 outline-2' onChange={handleForm} value={formData.phone} />
+
+
+                            <label className="label">Phone</label>
+                            <input required type="text" className="input w-full" name="phone" placeholder="Enter Your Phone" onChange={handleForm} value={formData.phone} />
                         </> : ''}
-                    <p className='font-semibold'> Password</p>
-                    <input type="password" className='w-3/4 rounded-md border-base-300 outline-2' name="password" onChange={handleForm} value={formData.password} />
+
+                    <label className="label">Password</label>
+                    <input required type="password" className="input w-full" name="password" placeholder="Enter Your Password" onChange={handleForm} value={formData.password} />
                     {type == 'signup' ?
                         <>
-                            <p className='font-semibold'>Confirm Password</p>
-                            <input type="password" className='w-3/4 rounded-md border-base-300 outline-2' name="confirmPassword" onChange={handleForm} value={formData.confirmPassword} />
+   
+
+                            <label className="label">Confirm Password</label>
+                            <input required type="password" className="input w-full" name="confirmPassword" placeholder="Please Re-write password" nChange={handleForm} value={formData.confirmPassword} />
                         </> : ''}
-                    <button className='btn '>Submit</button>
+
+                    <button  className="btn btn-neutral mt-4">{type=='signin'? 'Login': 'Register'}</button>
+
+
+
 
 
                 </form>

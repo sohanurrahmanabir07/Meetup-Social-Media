@@ -24,7 +24,7 @@ export const Navbar = () => {
     const [unreadCount, setUnreadCount] = useState(0)
 
     const notification = useSelector((state) => state.SocialMedia.notification)
-    const requestSet=useSelector((state) => state.SocialMedia.pendingList)
+    const requestSet = useSelector((state) => state.SocialMedia.pendingList)
 
     const handleChange = (e) => {
         setSearch(e.target.value)
@@ -52,7 +52,7 @@ export const Navbar = () => {
 
         socket.on('updateRqstPendingList', (result) => {
 
-            console.log(result,'=' ,result.data)
+            console.log(result, '=', result.data)
 
 
             dispatch(update_rqst_pending({ data: result.data, type: result.type }))
@@ -120,10 +120,14 @@ export const Navbar = () => {
 
                 {/* buttonss */}
                 <section className='flex space-x-4 items-center'>
+                    {
+                        user && (
+                            <div className='cursor-pointer md:hidden'>
+                                <FontAwesomeIcon icon={faMagnifyingGlass} size='lg' ></FontAwesomeIcon>
+                            </div>
+                        )
+                    }
 
-                    <div className='cursor-pointer md:hidden'>
-                        <FontAwesomeIcon icon={faMagnifyingGlass} size='lg' ></FontAwesomeIcon>
-                    </div>
 
                     {
                         user && (
