@@ -109,7 +109,7 @@ export const Auth = () => {
 
 
 
-                    socket.connect()
+           
 
                     dispatch(addUser(res.data.data))
                 }

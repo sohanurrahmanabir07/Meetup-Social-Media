@@ -1,6 +1,7 @@
 import React from 'react'
 
-export const Photos = ({active,setActive}) => {
+export const Photos = ({ active, setActive, photos }) => {
+
     return (
         <div className='p-2 space-y-4'>
 
@@ -11,7 +12,7 @@ export const Photos = ({active,setActive}) => {
                 </p>
 
 
-                <button className="btn btn-dash btn-secondary" onClick={()=>setActive('photos')} >See All Photos</button>
+                <button className="btn btn-dash btn-secondary" onClick={() => setActive('photos')} >See All Photos</button>
 
             </section>
 
@@ -21,25 +22,17 @@ export const Photos = ({active,setActive}) => {
                 <div className="grid grid-cols-2 gap-2 max-w-[600px] mx-auto p-4">
 
                     {/* First two images — large aspect ratio */}
+                    {
+                        photos && photos.slice(0,4).map((item, index) => {
+                            return (
+                                <PhotoCard url={item} key={index}></PhotoCard>
+                            )
+                        })
+                    }
 
-                    <PhotoCard url={"https://media.wired.com/photos/64f9d24e1b27a741aa23c0dd/master/pass/Studio-Ghibli-Ranked-Culture-HERON_img_1.jpg"} ></PhotoCard>
-                    
-                    <PhotoCard url={"https://www.hindustantimes.com/ht-img/img/2025/04/06/1600x900/parineeti_raghav_Studio_ghibli_1743917509270_1743917509611.jpg"} ></PhotoCard>
-                    
 
 
-                    <PhotoCard  url={"https://akm-img-a-in.tosshub.com/indiatoday/images/story/202504/sam-altman-on-ghibli-trend-305302139-3x4.jpg?VersionId=ZNgLhhEWK2YaYjFGnE_ieERzIOiPXLKF"}></PhotoCard>
 
-                    {/* Rest of the images — same square aspect ratio */}
-        
-
-                    <PhotoCard url={"https://res.cloudinary.com/jnto/image/upload/w_1080,h_600,c_fill,f_auto,fl_lossy,q_60/v1/media/filer_public/7b/b4/7bb47b18-9205-4408-b4b3-b27284147cee/karigurashi032_bpgpvr"} ></PhotoCard>
-
-   
-
-                    <PhotoCard url={"https://www.thestatesman.com/wp-content/uploads/2025/03/Screenshot-2025-03-29-144752-png.webp"} ></PhotoCard>
-
-                   
 
                 </div>
 
@@ -54,7 +47,7 @@ export const Photos = ({active,setActive}) => {
     )
 }
 
-export const PhotoCard = ({url}) => {
+export const PhotoCard = ({ url }) => {
     return (
 
 

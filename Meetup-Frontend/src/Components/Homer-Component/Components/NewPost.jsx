@@ -12,6 +12,7 @@ export const NewPost = () => {
     const VideoInputRef = useRef()
     const [imagePath, setImagePath] = useState(null)
     const [File, setFile] = useState(null)
+    const [Loading, setLoading] = useState(false)
     const user = useSelector((state) => state.SocialMedia.users)
     const [newPost, setNewPost] = useState({
         userID: user._id,
@@ -53,7 +54,7 @@ export const NewPost = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-
+        setLoading(true)
         let formData = new FormData()
         if (File) {
 
@@ -92,12 +93,12 @@ export const NewPost = () => {
 
                     });
 
-                    const data={
-                        friends:user.friends,
-                        post:res.data
+                    const data = {
+                        friends: user.friends,
+                        post: res.data
                     }
 
-                    socket.emit('UpdateFeed',data)
+                    socket.emit('UpdateFeed', data)
 
 
 
@@ -126,8 +127,12 @@ export const NewPost = () => {
 
                 });
             })
+            .finally(() => {
+                setLoading(false)  // move this here
+            })
 
-        
+
+
 
 
 
@@ -148,7 +153,7 @@ export const NewPost = () => {
                     </div>
                     <textarea name="info" className="p-2 resize-none w-2/3 max-sm:w-full h-[100px] text-xl focus:outline-none border-2 border-slate-400  rounded-md " onChange={(e) => { setNewPost({ ...newPost, [e.target.name]: e.target.value }) }} value={newPost.info} placeholder="Write your thoughts..." id=""></textarea>
 
-                    <button className="btn btn-error" disabled={!(File || newPost.info != '') ? true : false} >Post</button>
+                    <button className="btn btn-error" disabled={Loading || !(File || newPost.info !== '')}> {Loading ? 'Posting...' : 'Post'}</button>
 
                 </section>
 
@@ -199,6 +204,16 @@ export const NewPost = () => {
 
 
             </section>
+
+            {
+                Loading ? (
+                    <section className="text-center">
+                        <span className="loading loading-dots w-[70px]"></span>
+                    </section>
+
+                ) :
+                    ''
+            }
 
 
 

@@ -102,7 +102,7 @@ const SocialMediaSlice = createSlice({
       state.requestList=action.payload
       state.requestSet=[]
       state.requestSet=state.requestList.map((item)=>item.receiverID._id)
-      console.log('getRequest List',state.requestList)
+
 
 
     },
@@ -115,7 +115,6 @@ const SocialMediaSlice = createSlice({
 
     getOnlineUsers:(state,action)=>{
       state.onlineUsers=action.payload
-      // console.log('Online Users',state.onlineUsers)
     },
 
     markNotification:(state,action)=>{

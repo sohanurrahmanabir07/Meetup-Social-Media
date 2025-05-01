@@ -6,36 +6,51 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUser, getOnlineUsers } from '../redux/SocialStore';
 
 export const Root = () => {
-  const dispatch=useDispatch()
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.SocialMedia.users)
 
   useEffect(() => {
+    socket.connect()
     socket.on("connect", () => {
       console.log("✅ Socket connected with ID:", socket.id);
 
     });
 
 
-    socket.on('updateMyProfile',(data)=>{
-      console.log('freind list update',data)
+
+    socket.on('updateMyProfile', (data) => {
+      console.log('freind list update', data)
       dispatch(addUser(data))
     })
 
-    socket.on('getOnlineUsers',(data)=>{
+    socket.on('getOnlineUsers', (data) => {
 
       dispatch(getOnlineUsers(data))
     })
-  
-  
+
+
     return () => {
       socket.off('updateMyProfile')
+      socket.disconnect()
     };
   }, []);
 
-  
+
+  useEffect(() => {
+    if (user) {
+      socket.emit('join-user', { userID: user._id })
+    }
+
+  }, [user])
+
+
+
+
+
   return (
     <div className='dark:bg-slate-900'>
-        <Navbar></Navbar>
-        <Outlet></Outlet>
+      <Navbar></Navbar>
+      <Outlet></Outlet>
     </div>
 
   )

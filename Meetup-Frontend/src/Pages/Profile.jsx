@@ -22,8 +22,9 @@ export const Profile = () => {
 
     const [active, setActive] = useState(localStorage.getItem('active') || 'feed')
     const location = useLocation()
+    const [loading, setLoading] = useState(false)
     const [myPost, setMyPost] = useState(null)
-
+    const [photos,SetPhotos]=useState([])
     const [totalPost, setTotalPost] = useState(5)
 
     let myProfile = useSelector((state) => state.SocialMedia.users)
@@ -32,7 +33,8 @@ export const Profile = () => {
     const requestSet = new Set(useSelector((state) => state.SocialMedia.requestSet))
     const pendingList = useSelector((state) => state.SocialMedia.pendingList)
     const requestList = useSelector((state) => state.SocialMedia.requestList)
-    const [user, setUser] = useState(JSON.parse(localStorage.getItem('profile')) || myProfile)
+    const [user, setUser] = useState(location.state?.user || myProfile)
+
 
     const myFriend = myProfile?.friends
 
@@ -59,22 +61,36 @@ export const Profile = () => {
 
     useEffect(() => {
         if (user?._id) {
+
+            console.log('Current User', user.name)
+            setLoading(true)
             axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/mypost?id=${user?._id}`, {
                 withCredentials: true
             })
-                .then((res) => setMyPost(res.data))
+                .then((res) => {
+                    setLoading(false)
+
+                    setMyPost(res.data)
+                })
                 .catch((err) => console.log(err.message));
         }
     }, [user]);
+    useEffect(()=>{
+        let photoArr=[]
+        myPost && myPost.map((item,index)=>{
+            if(item.type=='photo' && item.imageUrl!=null){
+                photoArr.push(item.imageUrl)
+            }
+        })
+
+        SetPhotos(photoArr.reverse())
+
+    },[myPost])
+
 
     useEffect(() => {
 
-        console.log('pending list', pendingList)
-        console.log('pending set', pendingSet)
 
-
-        console.log('Request List', requestList)
-        console.log('Request Set', requestSet)
         return () => {
             localStorage.removeItem('profile')
             localStorage.removeItem('active')
@@ -129,7 +145,7 @@ export const Profile = () => {
         else {
             console.log('cancelPending')
             Info = pendingList.find((item) => item?.senderID?._id == JSON.parse(localStorage.getItem('profile'))?._id)
-            console.log('Info of deleting ',Info)
+            console.log('Info of deleting ', Info)
 
             if (Info) {
                 const temp = { ...Info }
@@ -344,9 +360,19 @@ export const Profile = () => {
                             <section>
 
                                 {
-                                    myPost != null && myPost?.slice(0, totalPost).map((item, index) => {
-                                        return (<Post key={index} item={item}></Post>)
-                                    })
+                                    loading ?
+                                        (
+                                            <p className='text-3xl font-bold text-center'>
+                                                ...Loading...
+                                            </p>
+                                        )
+                                        :
+                                        myPost != null && myPost?.slice(0, totalPost).map((item, index) => {
+                                            return (<Post key={index} item={item}></Post>)
+                                        })
+
+
+
                                 }
                                 {
                                     myPost?.length > totalPost ?
@@ -396,7 +422,7 @@ export const Profile = () => {
                                 (
                                     <div className='max-sm:flex max-sm:justify-center max-sm:items-center'>
 
-                                        <HomePhotos></HomePhotos>
+                                        <HomePhotos photos={photos}></HomePhotos>
                                     </div>
                                 )
                                 :
@@ -419,7 +445,7 @@ export const Profile = () => {
                     <About></About>
                 </div>
                 <div className='border-2 border-slate-500 rounded-lg'>
-                    <Photos active={active} setActive={setActive} ></Photos>
+                    <Photos active={active} setActive={setActive} photos={photos} ></Photos>
                 </div>
                 <div className='border-2 border-slate-500 rounded-lg'>
                     <FriendList friends={user?.friendList} active={active} setActive={setActive}  ></FriendList>

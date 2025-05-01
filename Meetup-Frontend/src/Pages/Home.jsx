@@ -18,8 +18,8 @@ export const Home = () => {
 
   useEffect(() => {
     if (!socket.connected && user?._id) {
-      socket.connect();
-      socket.emit('join-user', { userID: user._id });
+      // socket.connect();
+      // socket.emit('join-user', { userID: user._id });
 
       socket.on('getNotification', (data) => {
         // console.log('got the notification',data)
