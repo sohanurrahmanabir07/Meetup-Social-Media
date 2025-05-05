@@ -334,7 +334,6 @@ const SocialMediaSocket = (socket, io) => {
         console.log('friend info',friendID)
 
 
-
         if (friend_friends[myID._id]) {
             delete friend_friends[myID._id]
             const result_friend=friend_friendList.filter((item) => item.toString() != myID._id)
