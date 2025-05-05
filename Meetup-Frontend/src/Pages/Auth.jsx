@@ -5,10 +5,10 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import { useDispatch, useSelector } from 'react-redux'
 import { addUser } from '../redux/SocialStore'
-import socket from '../Socket/SocketServer'
 
 export const Auth = () => {
     const user = useSelector((state) => state.SocialMedia.users)
+    const [loading,setLoading]=useState(false)
     const location = useLocation()
     let type = location.state?.from
 
@@ -43,7 +43,7 @@ export const Auth = () => {
         if (type == 'signup' && (formData.password == formData.confirmPassword)) {
             delete formData.confirmPassword
 
-
+            setLoading(true)
             axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/registration`, formData, {
                 withCredentials: true,
                 headers: {
@@ -76,6 +76,9 @@ export const Auth = () => {
                         icon: "error"
                     })
 
+                })
+                .finally(()=>{
+                    setLoading(false)
                 })
 
 
@@ -209,7 +212,17 @@ export const Auth = () => {
                             <input required type="password" className="input w-full" name="confirmPassword" placeholder="Please Re-write password" nChange={handleForm} value={formData.confirmPassword} />
                         </> : ''}
 
-                    <button  className="btn btn-neutral mt-4">{type=='signin'? 'Login': 'Register'}</button>
+                    <button disabled={loading && true} className={`  btn btn-neutral mt-4 ${loading && ` cursor-not-allowed`}`}>
+                        
+                        
+                        {type=='signin'? 'Login': 'Register'}
+
+                        {loading && <span className="loading loading-spinner loading-xs"></span>}
+
+
+
+
+                    </button>
 
 
 
