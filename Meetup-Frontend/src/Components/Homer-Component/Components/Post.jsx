@@ -8,7 +8,6 @@ import { useState } from "react"
 import socket from "../../../Socket/SocketServer"
 import { useSelector } from "react-redux"
 import { DateTime } from "./DateTime"
-import { useNavigate } from "react-router"
 
 
 export const Post = ({ item, HandleLike,handleDeletePost }) => {
@@ -16,7 +15,7 @@ export const Post = ({ item, HandleLike,handleDeletePost }) => {
     const [messagField, setMessageField] = useState('')
     const [showComments, setShowComments] = useState(false)
     const user = useSelector((state) => state.SocialMedia.users)
-    const navigate=useNavigate()
+
     const LikeList = new Set(item.likes)
     const handleLike = () => {
         const data = {
@@ -70,7 +69,7 @@ export const Post = ({ item, HandleLike,handleDeletePost }) => {
                     <div className="flex space-x-2">
                         <ProfileIcon width={12} height={12} url={item?.userID?.pp} ></ProfileIcon>
                         <div>
-                            <p onClick={()=>navigate('/profile',{state:{user:item?.userID}})} className="text-lg font-semibold"> {item?.userID['name']}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >{<DateTime item={item} ></DateTime>}</span> </p>
+                            <p className="text-lg font-semibold"> {item?.userID['name']}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >{<DateTime item={item} ></DateTime>}</span> </p>
                             <p className="text-sm">{item?.userID?.worksAt || 'N/A'}</p>
                         </div>
                     </div>
