@@ -27,7 +27,7 @@ export const MessagesHistory = ({ selected, setSelected, messages, setMessages }
 
   return (
     <div className='h-[calc(100vh-20vh)] sm:w-full'>
-      <section className="py-3 h-1/10 z-10 ">
+      <section className="py-3 h-1/10 ">
         <ProfileChat selected={selected} setSelected={setSelected} ></ProfileChat>
       </section>
 

@@ -4,17 +4,25 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons"
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
+import { Modal } from "@mui/material"
+import { useRef } from "react"
+import { Post } from "../../Components/Homer-Component/Components/Post"
 
 
 export const Notification = ({ item, handleMarkRead, index }) => {
-    const user=useSelector((state)=>state.SocialMedia.users)
-    const navigate=useNavigate()
+    const user = useSelector((state) => state.SocialMedia.users)
+    const navigate = useNavigate()
+    const openNotification=useRef(null)
     return (
+
         <li className={`list-row  ${item?.read == false ? `bg-purple-600 text-white` : ''}  my-3 `} onClick={() => handleMarkRead(index)} >
 
-            <ProfileIcon width={10} height={10} ></ProfileIcon>
+            {/* <Modal box={openNotification} Component={<Post item={item} ></Post>}  ></Modal> */}
+            <div className="flex items-center" onClick={() => navigate('/profile', { state: { user: item.senderID } })}>
+                <ProfileIcon url={item?.senderID?.pp} width={10} height={10} ></ProfileIcon>
+            </div>
 
-            <div>
+            <div ref={openNotification} onClick={()=>openNotification.current.showModal()} > 
 
                 {
                     item.type == 'comment' || item.type == 'like' ?
@@ -23,24 +31,24 @@ export const Notification = ({ item, handleMarkRead, index }) => {
                                 {item.senderID?.name}<span className='font-semibold'></span> Has {item.type == 'comment' ? ' Commented' : 'Liked'} Your Post
                             </p>
                         )
-                    :
-                    
-                    item.type == 'friendRequest' ?
-                    (
-                        
-                            <p className="list-col-wrap text-base" onClick={() => navigate('/profile', { state: { 'user':item.info?.senderID,'feed': 'friends'} })}>
-                                {item.info?.senderID?.name}<span className='font-semibold'></span> Has Sent You Friend Request
-                            </p>
-                        
-                    ) 
-                    :
-                    (
-                        
-                            <p className="list-col-wrap text-base"  onClick={()=>navigate('/profile',{state:{user:item.info?.receiverID}})}>
-                                {item.info?.receiverID?.name}<span className='font-semibold'></span> Has Accepted Your Friend Request
-                            </p>
-                        
-                    ) 
+                        :
+
+                        item.type == 'friendRequest' ?
+                            (
+
+                                <p className="list-col-wrap text-base" onClick={() => navigate('/profile', { state: { 'user': item.info?.senderID, 'feed': 'friends' } })}>
+                                    {item.info?.senderID?.name}<span className='font-semibold'></span> Has Sent You Friend Request
+                                </p>
+
+                            )
+                            :
+                            (
+
+                                <p className="list-col-wrap text-base" onClick={() => navigate('/profile', { state: { user: item.info?.receiverID } })}>
+                                    {item.info?.receiverID?.name}<span className='font-semibold'></span> Has Accepted Your Friend Request
+                                </p>
+
+                            )
                 }
 
 

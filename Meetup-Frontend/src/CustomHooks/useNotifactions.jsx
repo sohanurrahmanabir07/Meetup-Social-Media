@@ -11,7 +11,9 @@ export const useNotifactions = (id) => {
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/notification?p=${p}&l=${l}&id=${id}`,{
         withCredentials:true
     })
-    .then((res)=>setNotification(res.data))
+    .then((res)=>{
+      console.log('Fetched The notfication data',res.data)
+      setNotification(res.data)})
     .catch((err)=>console.log(err))
 
   },[])

@@ -9,9 +9,10 @@ import socket from '../../Socket/SocketServer'
 import axios from 'axios'
 import Swal from 'sweetalert2'
 import DarkWhatsapp from './darkWhatsapp.png'
-import { useLocation } from 'react-router'
+import { useLocation, useNavigate } from 'react-router'
 import { SideBar } from '../../Components/Homer-Component/Components/SideBar'
 import { RightSideBar } from '../../Components/Homer-Component/Components/RightSideBar'
+import { useIsMobile } from '../../CustomHooks/useIsMobile'
 
 export const Messenger = () => {
 
@@ -163,17 +164,15 @@ export const Messenger = () => {
         }
     }, [listChat])
 
+    const isMobile = useIsMobile()
+    const navigate = useNavigate()
+    useEffect(() => {
+        if (isMobile) {
+            navigate("/msg/chatList");
+        }
+    }, [isMobile]);
 
-    // const today=new Date()
 
-    // const randDate="2025-04-15T17:42:48.440Z"
-
-    // if (today.toLocaleDateString('en-gb') != randDate.){
-    //     console.log('didnt match')
-    //     console.log(today.getDate()+'/'+today.getMonth()+'/'+today.getFullYear(),'  ',today.toLocaleTimeString(),'date=',today.toLocaleDateString('en-gb'))
-    // }else{
-    //     console.log('Did match')
-    // }
     const LightWhatsapp = "https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png";
 
 
@@ -183,15 +182,17 @@ export const Messenger = () => {
 
         <section>
 
-            {/* {
+            {
                 friendInfo && onlineUser ?
                     (<div className='md:hidden my-5 flex justify-between'>
-                        <SideBar Component={<Chatlist listChat={listChat} selected={selected} friends={friendInfo} user={user} setSelected={setSelected}  ></Chatlist>} friendInfo={friendInfo} ></SideBar>
-                        <RightSideBar Component={<Online onlineUser={onlineUser} friendInfo={friendInfo} selected={selected} setSelected={setSelected}></Online>}  onlineUser={onlineUser} ></RightSideBar>
+                        <SideBar
+                            Component={ <Chatlist listChat={listChat} selected={selected} friends={friendInfo} user={user} setSelected={setSelected} ></Chatlist>}
+                        />
+                        <RightSideBar Component={<Online onlineUser={onlineUser} friendInfo={friendInfo} selected={selected} setSelected={setSelected}></Online>} onlineUser={onlineUser} ></RightSideBar>
                     </div>)
                     :
                     ''
-            } */}
+            }
 
             <div className='flex w-full md:max-w-[1500px] md:m-auto' >
 
@@ -202,7 +203,7 @@ export const Messenger = () => {
                     <div className='max-sm:hidden'>
                         <Chatlist listChat={listChat} selected={selected} friends={friendInfo} user={user} setSelected={setSelected} ></Chatlist>
                     </div>
-                    
+
 
                     :
 
@@ -220,11 +221,11 @@ export const Messenger = () => {
 
                     :
 
-                    <div className={`border-x-2 dark:bg-[url('assets/images/darkWhatsapp.png')]    bg-[url(https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png)]    bg-no-repeat bg-cover bg-center border-slate-400   w-3/5 px-3  text-center`}>
+                    <div className={`border-x-2 dark:bg-[url('assets/images/darkWhatsapp.png')]  max-sm:h-screen max-sm:w-full  bg-[url(https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png)]    bg-no-repeat bg-cover bg-center border-slate-400  w-3/5 px-3  text-center`}>
 
-                        <p className='md:font-bold md:text-3xl  md:dark:text-5xl mt-[200px]'>...No Chat Selected....</p>
+                        <p className='font-bold md:text-3xl md:dark:text-5xl mt-[200px]'>...No Chat Selected....</p>
 
-                    </div> 
+                    </div>
 
                 }
 

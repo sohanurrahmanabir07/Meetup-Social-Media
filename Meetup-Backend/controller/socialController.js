@@ -24,7 +24,7 @@ const fetchPost = async (req, res) => {
                 path: 'userID',
                 model: 'Users'
             }
-        }).skip((page - 1) * 2).limit(10)
+        }).sort({ createdAt: -1 }).skip((page - 1) * 2).limit(10)
         if (result) {
             res.status(201).send(result)
         }
@@ -34,6 +34,48 @@ const fetchPost = async (req, res) => {
         res.send(error.message)
     }
 
+
+}
+const updateInfo = async (req, res) => {
+    try {
+        const data = req.body
+        const updateResult = await Users.updateOne({ _id: data.id }, { bio: data.bio, name: data.name, worksAt: data.worksAt, dOb: data.dOb, status: data.status, address: data.address })
+        if (updateResult) {
+            const profile = await Users.findById(data.id).populate('friendList')
+            res.status(201).send({
+                updatedProfile: profile
+            })
+
+        }
+    } catch (error) {
+        res.send(error.message)
+    }
+
+}
+
+const fetchPhoto = async (req, res) => {
+    const { id } = req.query
+
+    const getPhotos = (await Posts.find({ userID: id, type: 'photo' })).populate
+
+}
+const getMyProfile = async (req, res) => {
+    const { id } = req.query
+
+    console.log('id', id)
+
+    try {
+
+        const result = await Users.findById(id).populate('friendList')
+        if (result) {
+            res.status(201).send(result)
+        }
+
+    } catch (error) {
+        res.status(500).send({
+            messsage: 'Something Error in Server'
+        })
+    }
 
 }
 
@@ -62,6 +104,63 @@ const myPost = async (req, res) => {
         res.send(error.message)
     }
 
+}
+
+const uploadPPorCP = async (req, res) => {
+
+    const image = req.file
+    const { id, type } = req.query
+
+    console.log(req.query)
+    let path = null
+    try {
+        if (image) {
+            await cloudinary.uploader.upload(req.file.path)
+                .then((res) => {
+                    path = res.secure_url
+                })
+        }
+        if (type == 'pp') {
+            const user = await Users.updateOne({ _id: id }, { pp: path })
+
+        } else {
+            const user = await Users.updateOne({ _id: id }, { cp: path })
+
+        }
+
+        const updatedUser = await Users.findById(id).populate('friendList')
+        console.log('updateUser', updatedUser)
+        res.status(201).send({
+            updatedUser: updatedUser
+        })
+
+    } catch (error) {
+
+    }
+}
+
+const removePPorCP = async (req, res) => {
+
+    try {
+        const { id, type } = req.query
+
+        const getUser=await Users.findById(id).lean()
+
+        if(type=='pp'){
+            const updateProfile=await Users.updateOne({_id:id},{pp:null})
+        }else{
+            const updateProfile=await Users.updateOne({_id:id},{cp:null})
+        }
+
+        const updatedUser=await Users.findById(id).populate('friendList')
+        if(updatedUser){
+            res.status(201).send({
+                updateUser:updatedUser
+            })
+        }
+    } catch (error) {
+        res.send(error.message)
+    }
 }
 
 
@@ -98,9 +197,10 @@ const doPost = async (req, res) => {
 
 
     const post = new Posts(data)
-
+   
     try {
         const save = await post.save()
+        console.log('post to be saved',post)
         if (save) {
             const finalData = await Posts.findById(save._id).populate('userID').populate({
                 path: 'comments',
@@ -115,6 +215,8 @@ const doPost = async (req, res) => {
 
             }
             res.status(201).send(finalData)
+        }else{
+            console.log('Not Saved ')
         }
     } catch (error) {
         res.send(error.message)
@@ -153,7 +255,7 @@ const loadNotification = async (req, res) => {
     const { id, l, p } = req.query
     try {
         const page = parseInt(p)
-        const result = await Notification.find({ receiverID: id }).sort({TimeStamp:-1}).populate('senderID').skip((page - 1) * 10).limit(parseInt(l))
+        const result = await Notification.find({ receiverID: id }).sort({ TimeStamp: -1 }).populate('senderID').populate('receiverID').skip((page - 1) * 10).limit(parseInt(l))
         if (result) {
             res.status(201).send(result)
         } else {
@@ -172,9 +274,9 @@ const loadRequestandPendingList = async (req, res) => {
     const { id } = req.query
 
     try {
-        const friendRequest = await FriendRequst.find({ senderID: id ,pending:true}).populate('senderID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).populate('receiverID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).lean()
+        const friendRequest = await FriendRequst.find({ senderID: id, pending: true }).populate('senderID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).populate('receiverID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).lean()
 
-        const pendingRequest = await FriendRequst.find({ receiverID: id,pending:true }).populate('senderID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).populate('receiverID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).lean()
+        const pendingRequest = await FriendRequst.find({ receiverID: id, pending: true }).populate('senderID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).populate('receiverID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).lean()
 
 
         res.status(201).send({
@@ -198,7 +300,7 @@ const markReadNotification = async (req, res) => {
 
         if (updateNotification) {
             res.status(201).send('Updated')
-        }else{
+        } else {
             res.status(401).send('Couldnt Found')
         }
 
@@ -211,7 +313,7 @@ const markReadNotification = async (req, res) => {
 
 const DeleteCollection = async (req, res) => {
     // const collection = req.query.collection
-    const result = await Notification.deleteMany({type:'dislike'})
+    const result = await Notification.deleteMany({ type: 'dislike' })
     res.send(result)
 
 }
@@ -219,5 +321,5 @@ const DeleteCollection = async (req, res) => {
 
 
 module.exports = {
-    fetchPost, doPost, fileUpload, loadNotification, myPost, getUSer, DeleteCollection, loadRequestandPendingList,markReadNotification
+    fetchPost, doPost, fileUpload, loadNotification, myPost, getUSer, DeleteCollection, loadRequestandPendingList, markReadNotification, getMyProfile, updateInfo, uploadPPorCP,removePPorCP
 }

@@ -1,6 +1,4 @@
-import { faCircle } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React from 'react'
+
 import { useSelector } from 'react-redux'
 import { ProfileIcon } from '../../../Components/Homer-Component/Components/ProfileIcon'
 import { useNavigate } from 'react-router'
@@ -37,7 +35,7 @@ export const Online = ({ setSelected }) => {
                                 <section className="flex space-x-2 items-center  rounded-md cursor-pointer border-2 border-slate-500 my-2  hover:bg-purple-700 hover:text-gray-200" key={index}  onClick={setSelected? ()=>setSelected(item) : ()=>navigate('/msg',{state:{'selected':item}})} >
 
                                 
-                                    <ProfileIcon width={10} height={10} ></ProfileIcon>
+                                    <ProfileIcon url={item?.pp} width={10} height={10} ></ProfileIcon>
 
                                     <div className="text-base flex space-x-1">
                                         <p className="font-bold"> {item.name}</p>

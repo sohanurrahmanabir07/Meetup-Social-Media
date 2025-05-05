@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux'
 import { NewPost } from './Components/NewPost'
 import { Post } from './Components/Post'
 import { useEffect, useState } from 'react'
-import { useGetPosts } from '../../CustomHooks/useGetPosts'
 import axios from 'axios'
 import socket from '../../Socket/SocketServer'
 
@@ -25,13 +24,14 @@ export const NewsFeed = () => {
           setPostData(res.data)
         }
       })
+      .catch((error) => {
+        console.log(error)
+      })
 
 
-    socket.on('InsertNewPost', (post) => {
-      setPostData((prev) => [post, ...prev])
-    })
+
     socket.on('updateFeed', (post) => {
-      // console.log('updated post',post)
+
       setPostData((prevData) => {
         const index = prevData.findIndex((item) => item._id === post._id);
         if (index !== -1) {
@@ -43,13 +43,38 @@ export const NewsFeed = () => {
       });
     })
 
+    socket.on('deleteApost',(data)=>{
+      const id=data.id
+
+      setPostData((prevData) => prevData.filter((item) => item._id !== id));
+    })
+
+    return()=>{
+      socket.off('deleteApost')
+      socket.off('updateFeed')
+    }
+
 
   }, [user, page])
+
+  useEffect(() => {
+    socket.on('InsertNewPost', (post) => {
+      setPostData((prev) => [post, ...prev])
+    })
+    return ()=>{
+      socket.off('InsertNewPost')
+    }
+  }, [])
+
+
+  const handleDeletePost=()=>{
+    socket.emit('deletePost',{post:item})
+}
 
 
   const HandleLike = (item) => {
 
-    
+
     const data = {
       senderID: user._id,
       receiverID: item.userID._id,
@@ -84,6 +109,7 @@ export const NewsFeed = () => {
 
   }
 
+
   return (
     <div className='flex flex-col md:items-center space-y-5'>
 
@@ -93,7 +119,7 @@ export const NewsFeed = () => {
       {
         postData.map((item, index) => {
           return (
-            <Post key={index} item={item} HandleLike={HandleLike} ></Post>
+            <Post key={item._id} handleDeletePost={handleDeletePost}  item={item} HandleLike={HandleLike} />
           )
         })
       }

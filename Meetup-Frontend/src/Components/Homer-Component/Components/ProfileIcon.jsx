@@ -1,6 +1,7 @@
-import React from 'react'
 
-export const ProfileIcon = ({ width, height }) => {
+import { useState } from 'react'
+import NoProfile from '../../../assets/images/profile picture/emptypic.webp'
+export const ProfileIcon = ({ width, height, url }) => {
 
     if (width > 24) {
         width = `[${width}px]`
@@ -10,8 +11,7 @@ export const ProfileIcon = ({ width, height }) => {
     }
     return (
         <div>
-            {/* <img className={`w-[150px] h-[150px] object-cover border-4 border-white rounded-full `} src={'https://ofiles.kitety.com/ghibli/landingpage/e56036c6-2160-4ef3-bb7d-d189e2eb8c41.webp'} alt="" /> */}
-            <img className={`w-${width} h-${height} aspect-4/3 object-cover border-4 border-white rounded-full `} src={'https://ofiles.kitety.com/ghibli/landingpage/e56036c6-2160-4ef3-bb7d-d189e2eb8c41.webp'} alt="" />
+            <img className={`w-${width} h-${height}  ${width >= 120 ? `max-sm:${width - 50}  ` : `max-sm:${width}px `}   ${height >= 120 ? `max-sm:${height - 50}px  ` : `max-sm:${height}px`} aspect-4/3 object-cover border-4 border-white rounded-full `} src={` ${url == null || url == 'none' ? `${NoProfile}` : `${url}`}  `} alt="" />
         </div>
     )
 }

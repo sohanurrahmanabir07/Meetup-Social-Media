@@ -37,9 +37,10 @@ const PostSchema = new mongoose.Schema({
 
     shareMap: [{ type: Schema.Types.ObjectId, ref:'Users' }],
 
-    TimeStamp: String
 
-})
+},
+{timestamps:true})
+
 
 const Posts = mongoose.model('Posts', PostSchema)
 

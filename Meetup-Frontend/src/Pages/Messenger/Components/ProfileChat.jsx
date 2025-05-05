@@ -7,7 +7,7 @@ export const ProfileChat = ({ selected, setSelected }) => {
 
         <div className='flex space-x-2 '>
 
-            <button className='cursor-pointer'  onClick={()=>setSelected(null)}>
+            <button className='cursor-pointer'  onClick={()=>{setSelected(null) }}>
 
                 <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>
 

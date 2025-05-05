@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Notification } from './Notification'
-import { useNotifactions } from '../../CustomHooks/useNotifactions'
 import { useDispatch, useSelector } from 'react-redux'
-import socket from '../../Socket/SocketServer'
 import axios from 'axios'
 import { markNotification } from '../../redux/SocialStore'
 import Swal from 'sweetalert2'
@@ -13,12 +11,12 @@ export const NotificationInfo = ({unreadCount,setUnreadCount}) => {
     
     const user = useSelector((state) => state.SocialMedia.users)
     const notification=useSelector((state)=>state.SocialMedia.notification)
+
     const dispatch=useDispatch()
 
 
    const handleMarkRead=(index)=>{
 
-        console.log('mark as read')
         dispatch(markNotification(index))
 
         axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/markReadNotification`,{

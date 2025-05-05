@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { ProfileIcon } from "./ProfileIcon"
-import { faComment, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
+import { faComment, faEllipsisVertical, faThumbsUp } from "@fortawesome/free-solid-svg-icons"
 import { faShare } from "@fortawesome/free-solid-svg-icons"
 import { SendingBox } from '../../../Pages/Messenger/Components/SendingBox'
 import { Comment } from "./Comment"
@@ -10,7 +10,7 @@ import { useSelector } from "react-redux"
 import { DateTime } from "./DateTime"
 
 
-export const Post = ({ item, HandleLike }) => {
+export const Post = ({ item, HandleLike,handleDeletePost }) => {
     const [totalComment, setTotalComment] = useState(4)
     const [messagField, setMessageField] = useState('')
     const [showComments, setShowComments] = useState(false)
@@ -57,18 +57,40 @@ export const Post = ({ item, HandleLike }) => {
 
 
 
+
+
     if (item) {
         return (
             <div className="space-y-2 p-5 max-sm:p-2  dark:bg-slate-950 dark:text-gray-300 border-1 my-3 border-slate-400 rounded-md w-90/100  max-sm:w-full">
 
-                <section className="flex space-x-2">
-                    <ProfileIcon width={12} height={12} ></ProfileIcon>
-                    <div>
-                        <p className="text-lg font-semibold"> {item.userID['name']}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >{<DateTime item={item} ></DateTime>}</span> </p>
-                        <p className="text-sm">Software Engineer at Google</p>
+
+
+                <section className="flex justify-between  ">
+                    <div className="flex space-x-2">
+                        <ProfileIcon width={12} height={12} url={item?.userID?.pp} ></ProfileIcon>
+                        <div>
+                            <p className="text-lg font-semibold"> {item?.userID['name']}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >{<DateTime item={item} ></DateTime>}</span> </p>
+                            <p className="text-sm">{item?.userID?.worksAt || 'N/A'}</p>
+                        </div>
                     </div>
 
+                    {
+                        user._id == item.userID._id && (
+                            <div className="dropdown dropdown-end">
+
+                                <FontAwesomeIcon className="w-5 cursor-pointer" tabIndex={0} icon={faEllipsisVertical} size="xs" ></FontAwesomeIcon>
+                                <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm space-y-3">
+                                    <p onClick={handleDeletePost}  className="hover:bg-purple-950 hover:text-gray-300 text-base font-semibold rounded-sm cursor-pointer">Delete</p>
+                                    <p className="hover:bg-purple-950 hover:text-gray-300 text-base font-semibold rounded-sm cursor-pointer">Hide</p>
+                                </ul>
+                            </div>
+                        )
+                    }
+
+
                 </section>
+
+
                 {/* _____________Caption________________ */}
                 <section>
                     <p className="text-base font-semibold">

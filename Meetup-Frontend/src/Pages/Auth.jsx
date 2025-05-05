@@ -112,6 +112,13 @@ export const Auth = () => {
            
 
                     dispatch(addUser(res.data.data))
+                }else{
+                    Swal.fire({
+                        title: "Opps",
+                        text: res.data.message,
+                        icon: "warning"
+                    })
+
                 }
 
 
@@ -121,7 +128,7 @@ export const Auth = () => {
 
                     console.log(err)
                     Swal.fire({
-                        title: "Server Error!",
+                        title: "Opps!",
                         text: err.response.data.message,
                         icon: "error"
                     })

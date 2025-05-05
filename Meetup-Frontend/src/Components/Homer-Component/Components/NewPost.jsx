@@ -6,6 +6,7 @@ import { useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import Swal from "sweetalert2"
 import socket from "../../../Socket/SocketServer"
+import { ProfileIcon } from "./ProfileIcon"
 
 export const NewPost = () => {
     const PhotoInputRef = useRef();
@@ -54,6 +55,8 @@ export const NewPost = () => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
+
+
         setLoading(true)
         let formData = new FormData()
         if (File) {
@@ -76,6 +79,7 @@ export const NewPost = () => {
 
         } else {
             formData = newPost
+
         }
 
 
@@ -83,7 +87,6 @@ export const NewPost = () => {
             withCredentials: true
         })
             .then((res) => {
-
 
                 if (res.status == 201) {
                     Swal.fire({
@@ -98,8 +101,10 @@ export const NewPost = () => {
                         post: res.data
                     }
 
-                    socket.emit('UpdateFeed', data)
 
+
+                    socket.emit('UpdateFeed', data)
+                    console.log('emitting data', data)
 
 
 
@@ -116,6 +121,8 @@ export const NewPost = () => {
                 })
                 setFile(null)
                 setImagePath(null)
+
+                
 
 
             })
@@ -142,15 +149,13 @@ export const NewPost = () => {
 
 
     return (
-        <div className="space-y-2 p-5 dark:bg-slate-950 dark:text-gray-300 border-1 border-slate-500 rounded-md w-90/100 max-sm:w-full">
+        <div className="space-y-2 p-3 md:p-5  dark:bg-slate-950 dark:text-gray-300 border-1 border-slate-500 rounded-md w-90/100 max-sm:w-full">
 
             <form action="" onSubmit={handleSubmit} >
 
                 <section className="flex space-x-2">
 
-                    <div>
-                        <img className='w-12 h-12 object-cover border-4 border-white rounded-full ' src={'https://ofiles.kitety.com/ghibli/landingpage/e56036c6-2160-4ef3-bb7d-d189e2eb8c41.webp'} alt="" />
-                    </div>
+                    <ProfileIcon width={12} height={12} url={user?.pp} ></ProfileIcon>
                     <textarea name="info" className="p-2 resize-none w-2/3 max-sm:w-full h-[100px] text-xl focus:outline-none border-2 border-slate-400  rounded-md " onChange={(e) => { setNewPost({ ...newPost, [e.target.name]: e.target.value }) }} value={newPost.info} placeholder="Write your thoughts..." id=""></textarea>
 
                     <button className="btn btn-error" disabled={Loading || !(File || newPost.info !== '')}> {Loading ? 'Posting...' : 'Post'}</button>
@@ -177,7 +182,7 @@ export const NewPost = () => {
 
 
 
-            <section className="space-x-4 flex flex-wrap">
+            <section className="space-x-4 flex flex-wrap space-y-2">
 
                 <div>
                     <input type="file" accept="image/*" ref={PhotoInputRef} onChange={handleFileChange} style={{ display: 'none' }} />

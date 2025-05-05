@@ -25,18 +25,10 @@ export const Navbar = () => {
 
     const notification = useSelector((state) => state.SocialMedia.notification)
     const requestSet = useSelector((state) => state.SocialMedia.pendingList)
-
     const handleChange = (e) => {
         setSearch(e.target.value)
 
     }
-
-    // useEffect(() => {
-    //     socket.on('getNotification', (data) => {
-    //         console.log('got the notification', data)
-    //         dispatch(addNotification(data))
-    //     })
-    // }, [])
 
     useEffect(() => {
 

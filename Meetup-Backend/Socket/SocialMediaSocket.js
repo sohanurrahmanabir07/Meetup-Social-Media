@@ -149,7 +149,7 @@ const SocialMediaSocket = (socket, io) => {
                         }))
                     }
 
-                
+
                     socket.emit('updateRqstPendingList', ({
                         type: 'rqstList',
                         data: newRqstListSender
@@ -172,34 +172,34 @@ const SocialMediaSocket = (socket, io) => {
                     Receiver = await FriendRequst.find({ receiverID: rqstData.receiverID, pending: true }).populate('senderID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).populate('receiverID', { 'password': 0, 'chatHistory': 0, 'friends': 0 }).sort({ Timestamp: -1 }).lean()
 
                 }
-              
-                    if (type == 'cancelRequest') {
-                        if (onlineUsers[rqstData.receiverID]) {
-                            socket.to(onlineUsers[rqstData.receiverID]).emit('updateRqstPendingList', ({
-                                type: 'pendingList',
-                                data: Receiver
-                            }))
 
-
-                        }
-                        socket.emit('updateRqstPendingList', ({
-                            type: 'rqstList',
-                            data: Sender
-                        }))
-                    } else {
-                        if (onlineUsers[rqstData.senderID]) {
-                            socket.to(onlineUsers[rqstData.senderID]).emit('updateRqstPendingList', ({
-                                type: 'rqstList',
-                                data: Sender
-                            }))
-                        }
-                        socket.emit('updateRqstPendingList', ({
+                if (type == 'cancelRequest') {
+                    if (onlineUsers[rqstData.receiverID]) {
+                        socket.to(onlineUsers[rqstData.receiverID]).emit('updateRqstPendingList', ({
                             type: 'pendingList',
                             data: Receiver
                         }))
 
+
                     }
-                
+                    socket.emit('updateRqstPendingList', ({
+                        type: 'rqstList',
+                        data: Sender
+                    }))
+                } else {
+                    if (onlineUsers[rqstData.senderID]) {
+                        socket.to(onlineUsers[rqstData.senderID]).emit('updateRqstPendingList', ({
+                            type: 'rqstList',
+                            data: Sender
+                        }))
+                    }
+                    socket.emit('updateRqstPendingList', ({
+                        type: 'pendingList',
+                        data: Receiver
+                    }))
+
+                }
+
 
 
 
@@ -216,18 +216,26 @@ const SocialMediaSocket = (socket, io) => {
                     const receiver = await Users.findById(rqstData.receiverID).lean()
 
                     const friendsofSender = sender.friends
+                    let SenderFriendList = sender.friendList
                     const friendsofReceiver = receiver.friends
+                    let ReceiverFriendList = receiver.friendList
+
                     if (!(friendsofSender[rqstData.receiverID._id])) {
                         friendsofSender[rqstData.receiverID._id] = "newFriend"
+
+                        SenderFriendList.push(rqstData.receiverID._id)
+
                     }
                     if (!(friendsofReceiver[rqstData.senderID._id])) {
                         friendsofReceiver[rqstData.senderID._id] = "newFriend"
+
+                        ReceiverFriendList.push(rqstData.senderID._id)
                     }
 
 
 
-                    const senderUpdate = await Users.updateOne({ _id: rqstData.senderID }, { friends: friendsofSender })
-                    const receiverUpdate = await Users.updateOne({ _id: rqstData.receiverID }, { friends: friendsofReceiver })
+                    const senderUpdate = await Users.updateOne({ _id: rqstData.senderID }, { friends: friendsofSender, friendList: SenderFriendList })
+                    const receiverUpdate = await Users.updateOne({ _id: rqstData.receiverID }, { friends: friendsofReceiver, friendList: ReceiverFriendList })
 
                     // find two profile and then send------
 
@@ -249,7 +257,7 @@ const SocialMediaSocket = (socket, io) => {
             const notification = new Notification(data)
             const Request_accept = await notification.save()
 
-            finalResponse=Request_accept
+            finalResponse = Request_accept
 
 
         }
@@ -260,7 +268,7 @@ const SocialMediaSocket = (socket, io) => {
 
         if (finalResponse) {
 
-            console.log('Notification',finalResponse)
+            console.log('Notification', finalResponse)
 
             if (onlineUsers[data.receiverID] && data.type != 'dislike') {
                 socket.to(onlineUsers[data.receiverID]).emit('getNotification', finalResponse)
@@ -274,6 +282,76 @@ const SocialMediaSocket = (socket, io) => {
 
 
 
+
+    })
+
+
+
+    socket.on('deletePost', async (data) => {
+        try {
+            const post = data.post
+            const deletPost = await Posts.deleteOne({ _id: post._id })
+            if (deletPost) {
+                socket.emit('deleteApost', { id: post._id })
+
+                const friends = (await Users.findById(post.userID._id).select('friendList')).friendList
+
+                friends.map((item) => {
+                    if (onlineUsers[item.toString()]) {
+                        socket.to(onlineUsers[item.toString()]).emit('deleteApost', { id: post._id })
+                    }
+                })
+
+            }
+            // const friends=(await Users.findById(post.userID._id).select('friendList')).friendList
+
+            // friends.map((item)=>{
+            //    if(onlineUsers[item.toString()]){
+            //     socket.to(onlineUsers[item.toString()]).emit('deleteApost',{id:post._id})
+            //    }
+            // })
+
+
+
+        } catch (error) {
+
+        }
+    })
+
+    socket.on('unfriend', async (data) => {
+        const { friend, me } = data
+
+
+        const myID = await Users.findById(me._id).lean()
+        const friendID = await Users.findById(friend._id).lean()
+
+        const myfriends = myID.friends
+        const myfriendList = myID.friendList
+       
+        const friend_friends = friendID.friends
+        const friend_friendList = friendID.friendList
+
+        console.log('friend info',friendID)
+
+
+
+        if (friend_friends[myID._id]) {
+            delete friend_friends[myID._id]
+            const result_friend=friend_friendList.filter((item) => item.toString() != myID._id)
+            const updatedUser = await Users.updateOne({ _id: friendID._id }, { friends:friend_friends,friendList:result_friend})
+            const updatedFriend = (await Users.findById(friend._id).populate('freindList').lean())
+            if(onlineUsers[friendID._id]){
+                socket.to(onlineUsers[friendID._id]).emeit('updateMyProfile',updatedFriend)
+            }
+        }
+        if (myfriends[friendID._id]) {
+            delete myfriends[friendID._id]
+            const result_my=myfriendList.filter((item) => item.toString() != friendID._id)
+            const updatedUser = await Users.updateOne({ _id: myID._id }, { friends:myfriends,friendList:result_my})
+            const udpatedMyID = (await Users.findById(me._id).populate('freindList').lean())
+
+            socket.emit('updateMyProfile',udpatedMyID)
+        }  
 
     })
 

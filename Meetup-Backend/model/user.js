@@ -15,6 +15,14 @@ const UsersSchema=new mongoose.Schema({
         minLength:[6,'Number is too short'],
         maxLength:[11,'Number is too long']
     },
+    bio:{
+        type:String
+    },
+    worksAt:{type:String},
+    status:{type:String,enum:['single','married','in a relationship','divorced']},
+    dOb:{type:Date},
+    cp:{type:String},
+    pp:{type:String},
     password:{
         type:String,
         minLength:[6,'Password Too short'],

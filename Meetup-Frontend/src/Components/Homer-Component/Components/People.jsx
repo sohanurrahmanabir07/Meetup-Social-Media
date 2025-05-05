@@ -1,7 +1,7 @@
 
 import { ProfileIcon } from './ProfileIcon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus, faUserFriends } from '@fortawesome/free-solid-svg-icons'
 import { useGetUser } from '../../../CustomHooks/useGetUser'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -9,33 +9,39 @@ import { useSelector } from 'react-redux'
 
 export const People = ({ type }) => {
     const [suggestions, setSuggestions] = useState([])
-    const [checkSuggestion,setCheckSuggestion]=useState({})
-    const myProfile=useSelector((state)=>state.SocialMedia.users)
-    const navigate=useNavigate()
+    const [checkSuggestion, setCheckSuggestion] = useState({})
+    const myProfile = useSelector((state) => state.SocialMedia.users)
+    const friends = myProfile.friends
+    const navigate = useNavigate()
     const addFreind = (
         <span className='cursor-pointer text-center'>
-            <FontAwesomeIcon icon={faPlus} size='md' ></FontAwesomeIcon>
+            <FontAwesomeIcon icon={faPlus} size='base' ></FontAwesomeIcon>
+        </span>
+    )
+    const alreadyFriend = (
+        <span className='cursor-pointer text-center'>
+            <FontAwesomeIcon icon={faUserFriends} size='md' ></FontAwesomeIcon>
         </span>
     )
 
     const allUsers = useGetUser()
 
-    useEffect(()=>{
-        const track=new Set()
-        let temp=[]
-        allUsers?.map((item)=>{
-            const index=Math.floor(Math.random()*(allUsers.length))
-            if (!(track.has(index)) && allUsers[index]._id != myProfile._id){
-                temp=[...temp,allUsers[index]]
+    useEffect(() => {
+        const track = new Set()
+        let temp = []
+        allUsers?.map((item) => {
+            const index = Math.floor(Math.random() * (allUsers.length))
+            if (!(track.has(index)) && allUsers[index]._id != myProfile._id) {
+                temp = [...temp, allUsers[index]]
                 track.add(index)
-                if(track.length>=8){
+                if (track.length >= 8) {
                     return
                 }
             }
         })
         setSuggestions(temp)
-    
-    },[allUsers])
+
+    }, [allUsers])
 
 
 
@@ -53,20 +59,21 @@ export const People = ({ type }) => {
 
                 {
 
-                    suggestions && suggestions.map((item,index) => {
-                        
-                            return (
-                                <section key={index} onClick={()=>navigate('/profile',{state:{user:item}})} className="flex space-x-2 items-center  rounded-md   hover:bg-purple-700 hover:text-gray-200">
-                                    <ProfileIcon width={10} height={10} ></ProfileIcon>
-                                    <div>
-                                        <p className="text-base font-semibold">{item?.name.slice(0,15)} {addFreind} </p>
+                    suggestions && suggestions.map((item, index) => {
 
-                                    </div>
-                                </section>
-                            )
-                        }
 
-                    )   
+                        return (
+                            <section key={index} onClick={() => navigate('/profile', { state: { user: item } })} className="flex space-x-2 items-center  rounded-md   hover:bg-purple-700 hover:text-gray-200">
+                                <ProfileIcon url={item?.pp} width={10} height={10} ></ProfileIcon>
+                                <div>
+                                    <p className="text-base font-semibold">{item?.name.slice(0, 15)}  {!(friends[item._id]) ? addFreind : alreadyFriend  } </p>
+
+                                </div>
+                            </section>
+                        )
+                    }
+
+                    )
                 }
 
 

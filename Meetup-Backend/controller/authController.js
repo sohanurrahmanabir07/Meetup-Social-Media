@@ -64,7 +64,7 @@ const Login = async (req, res) => {
             res.status(500).send(error)
         }
     } else {
-        res.status(401).send({
+        res.status(202).send({
             message: 'User not Found'
         })
     }

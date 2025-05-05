@@ -34,7 +34,7 @@ export const useGetPosts = (user, page) => {
                 }
                 return prevData; // no match found, return unchanged
             });
-            console.log('All post',postData)
+
         })
 
         socket.on('getNotificaion',(data)=>{

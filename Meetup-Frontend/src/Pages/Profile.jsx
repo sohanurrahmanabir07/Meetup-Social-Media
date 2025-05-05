@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 
 import { ProfileIcon } from '../Components/Homer-Component/Components/ProfileIcon'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -17,6 +17,11 @@ import axios from 'axios'
 import { faMessage, faUser } from '@fortawesome/free-regular-svg-icons'
 import socket from '../Socket/SocketServer'
 import { addTo_rqst_pnding_List, remove_rqst_pnding_List } from '../redux/SocialStore'
+import { Modal } from '../Components/Modal'
+import { EditProfile } from './Profile Component/Edit Profile/EditProfile'
+import { UploadProfilePicture } from './Profile Component/Edit Profile/UploadProfilePicture'
+import NoProfile from '../../src/assets/images/profile picture/emptypic.webp'
+import Swal from 'sweetalert2'
 
 export const Profile = () => {
 
@@ -24,7 +29,7 @@ export const Profile = () => {
     const location = useLocation()
     const [loading, setLoading] = useState(false)
     const [myPost, setMyPost] = useState(null)
-    const [photos,SetPhotos]=useState([])
+    const [photos, SetPhotos] = useState([])
     const [totalPost, setTotalPost] = useState(5)
 
     let myProfile = useSelector((state) => state.SocialMedia.users)
@@ -34,8 +39,9 @@ export const Profile = () => {
     const pendingList = useSelector((state) => state.SocialMedia.pendingList)
     const requestList = useSelector((state) => state.SocialMedia.requestList)
     const [user, setUser] = useState(location.state?.user || myProfile)
+    const box = useRef(null)
 
-
+    const updateProfilePicuter = useRef(null)
     const myFriend = myProfile?.friends
 
 
@@ -48,6 +54,8 @@ export const Profile = () => {
 
             setUser(JSON.parse(localStorage.getItem('profile')))
 
+        } else {
+            setUser(myProfile)
         }
         if (location.state?.feed) {
             localStorage.setItem('active', location.state.feed)
@@ -57,12 +65,12 @@ export const Profile = () => {
 
 
 
-    }, [location.state]);
+    }, [location.state, myProfile]);
 
     useEffect(() => {
         if (user?._id) {
 
-            console.log('Current User', user.name)
+
             setLoading(true)
             axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/mypost?id=${user?._id}`, {
                 withCredentials: true
@@ -75,17 +83,17 @@ export const Profile = () => {
                 .catch((err) => console.log(err.message));
         }
     }, [user]);
-    useEffect(()=>{
-        let photoArr=[]
-        myPost && myPost.map((item,index)=>{
-            if(item.type=='photo' && item.imageUrl!=null){
+    useEffect(() => {
+        let photoArr = []
+        myPost && myPost.map((item, index) => {
+            if (item.type == 'photo' && item.imageUrl != null) {
                 photoArr.push(item.imageUrl)
             }
         })
 
         SetPhotos(photoArr.reverse())
 
-    },[myPost])
+    }, [myPost])
 
 
     useEffect(() => {
@@ -178,6 +186,33 @@ export const Profile = () => {
 
     }
 
+    const handleModal = () => {
+
+        box.current.showModal()
+
+    }
+
+    const handleFriend = () => {
+
+        Swal.fire({
+            title: "Do you want break your FriendShip?",
+            showDenyButton: true,
+            showCancelButton: true,
+            confirmButtonText: "Unfriend Now",
+            denyButtonText: `No Way`
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+            if (result.isConfirmed) {
+
+                socket.emit('unfriend',{friend:user, me: myProfile })
+
+                Swal.fire("Saved!", "", "success");
+            } else if (result.isDenied) {
+                Swal.fire("Changes are not saved", "", "info");
+            }
+        });
+    }
+
 
     return (
         <div className='md:max-w-[1500px] md:mx-auto flex'>
@@ -187,6 +222,7 @@ export const Profile = () => {
                 <div className='border-2 border-slate-500 rounded-sm'>
 
                     <section>
+                        {/* ------Cover picture---- */}
                         <div className=' lg:h-[400px] w-full overflow-y-hidden'>
                             <img className='object-cover' src={'https://i.pinimg.com/originals/30/5c/5a/305c5a457807ba421ed67495c93198d3.jpg'} alt="" />
                         </div>
@@ -194,18 +230,44 @@ export const Profile = () => {
                         <div className='md:flex justify-between lg:px-15 max-sm:px-5'>
 
                             <div className=' md:-mt-20 -mt-15 '>
-                                <div>
-                                    <img className={`md:w-[150px] md:h-[150px] w-[100px] h-[100px] object-cover border-4 border-white rounded-full `} src={'https://ofiles.kitety.com/ghibli/landingpage/e56036c6-2160-4ef3-bb7d-d189e2eb8c41.webp'} alt="" />
+                                <div className='relative md:w-[150px] md:h-[150px] w-[100px] h-[100px] '>
+                                    <img className={`md:w-[150px] md:h-[150px] w-[100px] h-[100px] object-cover border-4 border-white rounded-full `} src={user?.pp != null ? user.pp : NoProfile} alt="" />
+                                    {/* <ProfileIcon width={150} height={150} url={user?.pp} ></ProfileIcon> */}
+                                    {
+                                        user._id == myProfile._id ?
+                                            (<div className='absolute bottom-0 right-0 ' ref={updateProfilePicuter} onClick={() => updateProfilePicuter.current.showModal()}>
+                                                <FontAwesomeIcon className='cursor-pointer' icon={faPen} size='base' ></FontAwesomeIcon>
+
+                                            </div>)
+                                            :
+                                            ''
+
+                                    }
+
                                 </div>
+
                             </div>
+                            <Modal box={box} Component={<EditProfile></EditProfile>} ></Modal>
+                            <Modal box={updateProfilePicuter} Component={<UploadProfilePicture user={myProfile} ></UploadProfilePicture>} ></Modal>
 
                             <div className='flex justify-between md:w-85/100 w-full items-center'>
                                 <div>
                                     <p className='font-bold md:text-2xl'>{user?.name}</p>
                                 </div>
-                                <div>
-                                    <button className="btn btn-soft btn-secondary ">Edit Profile <FontAwesomeIcon icon={faPen} size='sm'></FontAwesomeIcon></button>
-                                </div>
+                                {
+                                    ((localStorage.getItem('profile') && (myProfile?._id != JSON.parse(localStorage.getItem('profile'))?._id))) ?
+                                        ''
+                                        :
+                                        (
+                                            <>
+                                                <div onClick={handleModal}>
+                                                    <button className="btn btn-soft btn-secondary ">Edit Profile <FontAwesomeIcon icon={faPen} size='sm'></FontAwesomeIcon></button>
+                                                </div>
+
+                                            </>
+                                        )
+                                }
+
                             </div>
 
                         </div>
@@ -213,6 +275,7 @@ export const Profile = () => {
                     </section>
 
                     <section className='flex space-x-3'>
+
 
 
 
@@ -276,7 +339,7 @@ export const Profile = () => {
                                     :
 
                                     (
-                                        <div className='flex items-center btn  btn-ghost btn-secondary'>
+                                        <div className='flex items-center btn  btn-ghost btn-secondary' onClick={handleFriend}>
                                             <FontAwesomeIcon icon={faUser} size='lg' > </FontAwesomeIcon>
                                             <p>Friends</p>
                                         </div>
@@ -314,11 +377,11 @@ export const Profile = () => {
 
                         <div className=' flex items-center space-x-2'>
                             <FontAwesomeIcon icon={faBriefcase}></FontAwesomeIcon>
-                            <p>Student</p>
+                            <p>{user?.worksAt || 'N/A'}</p>
                         </div>
                         <div className=' flex items-center space-x-2' >
                             <FontAwesomeIcon icon={faLocationDot}></FontAwesomeIcon>
-                            <p>Dhaka,Bangladesh</p>
+                            <p>{user?.address || 'N/A'} </p>
                         </div>
 
 
@@ -414,7 +477,7 @@ export const Profile = () => {
                             (
                                 <div>
 
-                                    <About></About>
+                                    <About user={user}></About>
                                 </div>
                             )
                             :
@@ -442,7 +505,7 @@ export const Profile = () => {
             <section className='max-sm:hidden md:w-25/100 px-3 space-y-10'>
 
                 <div className='border-2 border-slate-500 rounded-lg'>
-                    <About></About>
+                    <About user={user}></About>
                 </div>
                 <div className='border-2 border-slate-500 rounded-lg'>
                     <Photos active={active} setActive={setActive} photos={photos} ></Photos>

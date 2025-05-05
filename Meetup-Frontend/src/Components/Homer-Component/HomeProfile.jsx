@@ -12,12 +12,12 @@ export const HomeProfile = () => {
     return (
         <div  className=' dark:bg-slate-950 dark:text-gray-300 pb-3 text-gray-700 rounded-md'>
 
-            <CoverWithPicture></CoverWithPicture>
+            <CoverWithPicture user={user}></CoverWithPicture>
 
 
             <section className='text-center mt-1 font-semibold'>
                 <p className='text-lg'>{user?.name}</p>
-                <p className='text-sm font-normal'> Software Engineer</p>
+                <p className='text-sm font-normal'> {user?.worksAt}</p>
             </section>
             <br />
 

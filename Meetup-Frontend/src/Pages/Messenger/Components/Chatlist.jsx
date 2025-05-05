@@ -1,16 +1,19 @@
 import { faMagnifyingGlass, faPlus } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-import { useEffect, useRef, useState } from "react"
-import { useSelector } from "react-redux"
+import { useRef, useState } from "react"
+
 import { useNavigate } from "react-router"
 import { Modal } from "../../../Components/Modal"
+import { MultiSelect } from "../../../Components/MultiSelect"
 
 
-export const Chatlist = ({ listChat, selected, setSelected, friends }) => {
+export const Chatlist = ({ listChat, selected, setSelected, friends, closeDrawer }) => {
   const navigate = useNavigate()
 
   const [search, setSearch] = useState('')
+
+
 
   const box = useRef(null)
 
@@ -35,7 +38,7 @@ export const Chatlist = ({ listChat, selected, setSelected, friends }) => {
         </div>
 
 
-        <Modal box={box} friends={friends} ></Modal>
+        <Modal box={box} Component={<MultiSelect friends={friends} ></MultiSelect>} ></Modal>
 
         <div className="flex items-center space-x-1 border-slate-500 border-2 rounded-md p-1">
           <FontAwesomeIcon icon={faMagnifyingGlass}></FontAwesomeIcon>
@@ -47,7 +50,15 @@ export const Chatlist = ({ listChat, selected, setSelected, friends }) => {
             search.length > 3 && filtered.map((item, index) => {
 
               return (
-                <li key={index} className="p-2 list-none hover:bg-purple-600 hover:text-white  border-2 border-slate-400 z-2 cursor-pointer font-semibold capitalize" onClick={() => { setSelected(friends[item]); setSearch('') }} >{friends[item].name}</li>
+                <div onClick={closeDrawer? closeDrawer : ''}>
+                  <li key={index} className="p-2 list-none hover:bg-purple-600 hover:text-white  border-2 border-slate-400 z-2 cursor-pointer font-semibold capitalize" onClick={() => {
+                    setSelected(friends[item]);
+                    setSearch('')
+
+
+                  }} >{friends[item].name}</li>
+                </div>
+
               )
             }
 
@@ -73,13 +84,13 @@ export const Chatlist = ({ listChat, selected, setSelected, friends }) => {
             <div className="text-sm">
               <p className="font-bold">{listChat[item].name || listChat[item].groupName}</p>
 
-                {listChat[item].lastMessage.length > 30 ?
+              {listChat[item].lastMessage.length > 30 ?
 
-                  (<p>{listChat[item].lastMessage.slice(0, 29)} <b className="font-extrabold">.............</b> </p>)
-                  :
+                (<p>{listChat[item].lastMessage.slice(0, 29)} <b className="font-extrabold">.............</b> </p>)
+                :
 
-                  (<p>{listChat[item].lastMessage}</p>)
-                }
+                (<p>{listChat[item].lastMessage}</p>)
+              }
             </div>
 
 

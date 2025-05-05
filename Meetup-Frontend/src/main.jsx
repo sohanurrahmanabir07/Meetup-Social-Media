@@ -12,6 +12,7 @@ import { Profile } from './Pages/Profile.jsx'
 import { Home } from './Pages/Home.jsx'
 import { ProtectiveRoute } from './Components/ProtectiveRoute.jsx'
 import { LandingPage } from './Pages/LandingPage.jsx'
+import { Chatlist } from './Pages/Messenger/Components/Chatlist.jsx'
 
 
 
@@ -33,7 +34,13 @@ const router = createBrowserRouter([
       },
       {
         element:<ProtectiveRoute><Messenger></Messenger></ProtectiveRoute>,
-        path: '/msg'
+        path: '/msg',
+        children:[
+          {
+            path:'/msg/chatList',
+            element:<Chatlist></Chatlist>
+          }
+        ]
 
       },
       {
