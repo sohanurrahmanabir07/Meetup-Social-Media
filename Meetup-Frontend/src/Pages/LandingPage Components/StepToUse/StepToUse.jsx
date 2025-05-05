@@ -19,49 +19,49 @@ export const StepToUse = () => {
 
     const Content1 = (
         <div className="text-center">
-            <p className="font-semibold text-2xl">Step One</p>
-            <p className="font-semibold text-lg">Create Account and Sign in</p>
+            <p className="font-semibold md:text-2xl text-lg">Step One</p>
+            <p className="font-semibold md:text-lg">Create Account and Sign in</p>
         </div>
     )
 
     const Content2 = (
         <div className="text-center">
-            <p className="font-semibold text-2xl">Step Two</p>
-            <p className="font-semibold text-lg">Search For Friends And Send Friend Request</p>
+            <p className="font-semibold md:text-2xl text-lg">Step Two</p>
+            <p className="font-semibold md:text-lg">Search For Friends And Send Friend Request</p>
         </div>
     )
 
     const Content3 = (
         <div className="text-center">
-            <p className="font-semibold text-2xl">Step Three</p>
-            <p className="font-semibold text-lg">Like And Write Your Emotions to your Friends Post </p>
+            <p className="font-semibold md:text-2xl text-lg">Step Three</p>
+            <p className="font-semibold md:text-lg">Like And Write Your Emotions to your Friends Post </p>
         </div>
     )
 
     const Content4 = (
         <div className="text-center">
-            <p className="font-semibold text-2xl">Step Four</p>
-            <p className="font-semibold text-lg">Update Your Feed With Status or Photo with Captions </p>
+            <p className="font-semibold md:text-2xl text-lg">Step Four</p>
+            <p className="font-semibold md:text-lg">Update Your Feed With Status or Photo with Captions </p>
         </div>
     )
 
     const Content5 = (
         <div className="text-center">
-            <p className="font-semibold text-2xl">Step Five</p>
-            <p className="font-semibold text-lg">Send Message to your Friends  </p>
+            <p className="font-semibold md:text-2xl text-lg">Step Five</p>
+            <p className="font-semibold md:text-lg">Send Message to your Friends  </p>
         </div>
     )
 
     const Content6 = (
         <div className="text-center">
-            <p className="font-semibold text-2xl">Step Six</p>
-            <p className="font-semibold text-lg"> Make a group and Send Messages  </p>
+            <p className="font-semibold  md:text-2xl text-lg">Step Six</p>
+            <p className="font-semibold md:text-lg"> Make a group and Send Messages  </p>
         </div>
     )
     const Content7 = (
         <div className="text-center">
-            <p className="font-semibold text-2xl">In Future</p>
-            <p className="font-semibold text-lg">More Feature will come </p>
+            <p className="font-semibold  md:text-2xl text-lg">In Future</p>
+            <p className="font-semibold md:text-lg">More Feature will come </p>
         </div>
     )
 

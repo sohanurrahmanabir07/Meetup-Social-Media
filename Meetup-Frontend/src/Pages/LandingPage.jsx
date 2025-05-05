@@ -11,8 +11,8 @@ import { StepToUse } from './LandingPage Components/StepToUse/StepToUse'
 export const LandingPage = () => {
 
     const writingPart1 = (
-        <div className="space-y-5 w-1/2 text-center ">
-            <p className="font-semibold md:text-5xl">Connect, Share, and Chat <br />Welcome to  <span className='text-orange-500'>M</span>eetup🔥</p>
+        <div className="space-y-5 md:w-1/2 w-full text-center ">
+            <p className="font-semibold md:text-5xl  text-2xl ">Connect, Share, and Chat <br />Welcome to  <span className='text-orange-500'>M</span>eetup🔥</p>
             <p className="text-lg">Your hub for real-time conversations and photo sharing</p>
             <div>
                 <button className="btn btn-outline hover:bg-purple-950 hover:text-gray-300 border-1 border-purple-950">Join Now</button>
@@ -28,7 +28,7 @@ export const LandingPage = () => {
     )
 
     const WritingPar2 = (
-        <div className="space-y-5 w-1/2 text-center ">
+        <div className="space-y-5 w-full  lg:w-1/2 text-center ">
 
             <p className="font-semibold md:text-4xl text-left">Speak your mind, share your world</p>
 
@@ -54,7 +54,7 @@ export const LandingPage = () => {
     )
 
     const WritingPar3 = (
-        <div className="space-y-5 w-1/2 text-center ">
+        <div className="space-y-5 w-full  lg:w-1/2 text-center ">
 
             <p className="font-semibold md:text-4xl text-left">Real-Time Chat with Friends</p>
 
@@ -80,7 +80,7 @@ export const LandingPage = () => {
     )
 
     const WritingPart4 = (
-        <div className="space-y-5 w-1/2 text-center ">
+        <div className="space-y-5 text-center w-full  lg:w-1/2">
 
             <p className="font-semibold md:text-4xl text-left"> Friend Requests / Accept</p>
 
@@ -134,14 +134,14 @@ export const LandingPage = () => {
 
 
     return (
-        <div className="md:max-w-[1340px] md:m-auto">
+        <div className="md:max-w-[1340px] md:m-auto max-sm:space-y-3">
 
             <section>
 
                 <Hero Component1={writingPart1} Component2={ImagePart1} height={`h-screen`} ></Hero>
             </section>
 
-            <section className='md:text-5xl font-semibold text-center mb-20'>
+            <section className='md:text-5xl text-2xl font-semibold text-center mb-20'>
                 <p>Features You Will Get</p>
             </section>
 
@@ -150,7 +150,7 @@ export const LandingPage = () => {
                     <Hero Component1={ImagePart2} Component2={WritingPar2}  ></Hero>
                 </section>
                 <section className='px-4'>
-                    <Hero Component1={WritingPar3} Component2={ImagePart3}  ></Hero>
+                    <Hero Component1={WritingPar3} Component2={ImagePart3} reverse='flex-col-reverse'  ></Hero>
                 </section>
                 <section className='px-4'>
                     <Hero Component1={ImagePart4} Component2={WritingPart4}  ></Hero>
@@ -162,7 +162,7 @@ export const LandingPage = () => {
 
 
             <section className='my-20 text-center'>
-                <p className='font-semibold text-5xl'>How to get Started with <span className='text-orange-500'>M</span>eetup🔥</p>
+                <p className='font-semibold lg:text-5xl text-xl'>How to get Started with <span className='text-orange-500'>M</span>eetup🔥</p>
             </section>
 
 

@@ -48,7 +48,7 @@ export const Navbar = () => {
     return (
 
 
-        <div className=' dark:bg-slate-950 max-sm:p-2 bg-purple-950 text-gray-300 '>
+        <div className=' dark:bg-slate-950 max-sm:p-2 bg-purple-950 text-gray-300 sticky top-0 '>
 
             {
                 showSearch ?
@@ -70,7 +70,7 @@ export const Navbar = () => {
 
 
                     (
-                        <div className="navbar  flex justify-between  lg:max-w-[1340px] lg:m-auto ">
+                        <div className="navbar  flex justify-between items-center lg:max-w-[1340px] lg:m-auto ">
                             <div className="cursor-pointer" onClick={() => navigate('/home')} >
                                 <a className="text-2xl">Meetup🔥</a>
                             </div>
