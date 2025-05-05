@@ -56,18 +56,18 @@ export const HomeProfile = () => {
                         <FontAwesomeIcon icon={faUserGroup} className='w-5'></FontAwesomeIcon>
                         <p className='text-lg font-semibold hover:text-primary' onClick={() => navigate('/profile', { state: { 'feed': 'friends','user':user } })} >Friends</p>
                     </div>
-                    <div className='flex space-x-2 cursor-pointer items-center'>
+                    <div className='flex space-x-2 cursor-not-allowed items-center'>
                         <FontAwesomeIcon icon={faNewspaper} className='w-5'></FontAwesomeIcon>
-                        <p className='text-lg font-semibold hover:text-primary'>Latest News</p>
+                        <p className='text-lg font-semibold '>Latest News</p>
                     </div>
-                    <div className='flex space-x-2 cursor-pointer items-center'>
+                    <div className='flex space-x-2 cursor-not-allowed items-center'>
                         <FontAwesomeIcon icon={faPeopleGroup} className='w-5'></FontAwesomeIcon>
-                        <p className='text-lg font-semibold hover:text-primary'>Groups</p>
+                        <p className='text-lg font-semibold '>Groups</p>
                     </div>
 
-                    <div className='flex space-x-2 cursor-pointer items-center'>
+                    <div className='flex space-x-2 cursor-not-allowed items-center'>
                         <FontAwesomeIcon icon={faGear} className='w-5'></FontAwesomeIcon>
-                        <p className='text-lg font-semibold hover:text-primary'>Settings</p>
+                        <p className='text-lg font-semibold '>Settings</p>
                     </div>
 
 

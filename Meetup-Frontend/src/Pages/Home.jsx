@@ -58,8 +58,8 @@ export const Home = () => {
     <div className='text-3xl lg:max-w-[1340px] lg:m-auto'>
 
       <div className='md:hidden my-5 flex justify-between'>
-        <SideBar Component={<HomeProfile></HomeProfile>} ></SideBar>
-        <RightSideBar Component={<RightPortion></RightPortion>} ></RightSideBar>
+        <SideBar Component={<HomeProfile></HomeProfile>}buttonName={'Profile'} ></SideBar>
+        <RightSideBar Component={<RightPortion></RightPortion>} buttonName={'People'} ></RightSideBar>
       </div>
 
       <div className='flex lg:space-5 max-sm:flex-col mt-5'>

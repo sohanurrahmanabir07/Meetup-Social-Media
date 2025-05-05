@@ -13,6 +13,9 @@ import { Home } from './Pages/Home.jsx'
 import { ProtectiveRoute } from './Components/ProtectiveRoute.jsx'
 import { LandingPage } from './Pages/LandingPage.jsx'
 import { Chatlist } from './Pages/Messenger/Components/Chatlist.jsx'
+import { MobileRoute } from './Components/MobileRoute.jsx'
+import { NotificationMbile } from './Navbar-Footer/NavbarTools/Notication Mobile view/NotificationMbile.jsx'
+import { NotificationInfo } from './Navbar-Footer/NavbarTools/NotificationInfo.jsx'
 
 
 
@@ -46,6 +49,11 @@ const router = createBrowserRouter([
       {
         element: <ProtectiveRoute><Profile></Profile></ProtectiveRoute>,
         path:'/profile'
+      },
+
+      {
+        element:<ProtectiveRoute> <MobileRoute><NotificationInfo></NotificationInfo></MobileRoute> </ProtectiveRoute>,
+        path:'/notification'
       },
      
       {

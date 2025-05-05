@@ -122,7 +122,7 @@ export const NewPost = () => {
                 setFile(null)
                 setImagePath(null)
 
-                
+
 
 
             })
@@ -149,16 +149,18 @@ export const NewPost = () => {
 
 
     return (
-        <div className="space-y-2 p-3 md:p-5  dark:bg-slate-950 dark:text-gray-300 border-1 border-slate-500 rounded-md w-90/100 max-sm:w-full">
+        <div className="space-y-2 p-2 md:p-5  dark:bg-slate-950 dark:text-gray-300 border-1 border-slate-500 rounded-md w-90/100 max-sm:w-full">
 
             <form action="" onSubmit={handleSubmit} >
 
-                <section className="flex space-x-2">
+                <section className="flex md:space-x-2  space-x-1">
+                    <div>
+                        <ProfileIcon width={12} height={12} url={user?.pp} ></ProfileIcon>
+                    </div>
 
-                    <ProfileIcon width={12} height={12} url={user?.pp} ></ProfileIcon>
                     <textarea name="info" className="p-2 resize-none w-2/3 max-sm:w-full h-[100px] text-xl focus:outline-none border-2 border-slate-400  rounded-md " onChange={(e) => { setNewPost({ ...newPost, [e.target.name]: e.target.value }) }} value={newPost.info} placeholder="Write your thoughts..." id=""></textarea>
 
-                    <button className="btn btn-error" disabled={Loading || !(File || newPost.info !== '')}> {Loading ? 'Posting...' : 'Post'}</button>
+                    <button className="btn btn-error max-sm:w-10 max-sm:text-xs" disabled={Loading || !(File || newPost.info !== '')}> {Loading ? 'Posting...' : 'Post'}</button>
 
                 </section>
 
@@ -189,9 +191,9 @@ export const NewPost = () => {
                     <button className="btn " type="button" onClick={() => handleClick('photo')} > <span><FontAwesomeIcon className="text-green-600" icon={faImage} size="md"></FontAwesomeIcon></span> Photo</button>
                 </div>
 
-                <div>
+                <div >
                     <input type="file" accept="video/*" ref={VideoInputRef} onChange={handleFileChange} style={{ display: 'none' }} />
-                    <button className="btn rounded-lg" type="button" onClick={() => handleClick('video')}> <span><FontAwesomeIcon className="text-blue-600" icon={faVideo} size="md"></FontAwesomeIcon></span>  Video</button>
+                    <button disabled={true} className="btn rounded-lg cursor-not-allowed" type="button" onClick={() => handleClick('video')}> <span><FontAwesomeIcon className="text-blue-600" icon={faVideo} size="md"></FontAwesomeIcon></span>  Video</button>
                 </div>
 
                 <div className="cursor-not-allowed">

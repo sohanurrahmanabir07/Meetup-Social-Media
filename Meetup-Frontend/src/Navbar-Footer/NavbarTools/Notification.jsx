@@ -15,7 +15,7 @@ export const Notification = ({ item, handleMarkRead, index }) => {
     const openNotification=useRef(null)
     return (
 
-        <li className={`list-row  ${item?.read == false ? `bg-purple-600 text-white` : ''}  my-3 `} onClick={() => handleMarkRead(index)} >
+        <li className={`list-row max-sm:rounded-sm  ${item?.read == false ? `bg-purple-600 text-white` : ''}  my-3 `} onClick={() => handleMarkRead(index)} >
 
             {/* <Modal box={openNotification} Component={<Post item={item} ></Post>}  ></Modal> */}
             <div className="flex items-center" onClick={() => navigate('/profile', { state: { user: item.senderID } })}>

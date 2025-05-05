@@ -1,9 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { HomeProfile } from "../HomeProfile"
 import { faUser } from "@fortawesome/free-regular-svg-icons"
+import { useLocation } from "react-router"
 
 
-export const SideBar = ({ Component}) => {
+export const SideBar = ({ Component,buttonName}) => {
+
+
+
+    
+
     const closeDrawer = () => {
         
         const checkbox = document.getElementById("my-drawer-chatlist")
@@ -14,7 +20,7 @@ export const SideBar = ({ Component}) => {
             <input id="my-drawer-chatlist" type="checkbox" className="drawer-toggle" />
             <div className="drawer-content">
 
-                <label htmlFor="my-drawer-chatlist" className="btn drawer-button rounded-lg"><FontAwesomeIcon icon={faUser} size="lg"></FontAwesomeIcon> Profile</label>
+                <label htmlFor="my-drawer-chatlist" className="btn drawer-button rounded-lg"><FontAwesomeIcon icon={faUser} size="lg"></FontAwesomeIcon> {buttonName}</label>
             </div>
             <div className="drawer-side z-20">
                 <label htmlFor="my-drawer-chatlist" aria-label="close sidebar" className="drawer-overlay"></label>

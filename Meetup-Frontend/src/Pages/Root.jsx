@@ -31,12 +31,12 @@ export const Root = () => {
     })
 
     if (user) {
-      console.log('calling user')
+
       axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getMyprofile?id=${user._id}`, {
         withCredentials: true
       })
         .then((res) => {
-          console.log('Now ',res.data)
+
           dispatch(addUser(res.data))
         })
         .catch((error) => {
@@ -64,7 +64,7 @@ export const Root = () => {
   useEffect(() => {
     if (user) {
       socket.emit('join-user', { userID: user._id })
-      console.log('Run')
+
     }
 
   }, [user])

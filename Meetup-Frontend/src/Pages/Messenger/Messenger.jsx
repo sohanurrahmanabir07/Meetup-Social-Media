@@ -186,9 +186,10 @@ export const Messenger = () => {
                 friendInfo && onlineUser ?
                     (<div className='md:hidden my-5 flex justify-between'>
                         <SideBar
-                            Component={ <Chatlist listChat={listChat} selected={selected} friends={friendInfo} user={user} setSelected={setSelected} ></Chatlist>}
+                            Component={<Chatlist listChat={listChat} selected={selected} friends={friendInfo} user={user} setSelected={setSelected} ></Chatlist>}
+                            buttonName={'Chats'}
                         />
-                        <RightSideBar Component={<Online onlineUser={onlineUser} friendInfo={friendInfo} selected={selected} setSelected={setSelected}></Online>} onlineUser={onlineUser} ></RightSideBar>
+                        <RightSideBar buttonName={'Online'} Component={<Online onlineUser={onlineUser} friendInfo={friendInfo} selected={selected} setSelected={setSelected}></Online>} onlineUser={onlineUser} ></RightSideBar>
                     </div>)
                     :
                     ''
@@ -208,7 +209,7 @@ export const Messenger = () => {
                     :
 
                     (
-                        <div className=' dark:bg-slate-950 h-[calc(100vh-60px)] overflow-y-scroll max-sm:w-full text-center w-1/5 p-3 '>
+                        <div className=' dark:bg-slate-950 h-[calc(100vh-60px)] max-sm:hidden overflow-y-scroll max-sm:w-full text-center w-1/5 p-3 '>
 
                             <p className='text-3xl pt-1/2 font-semibold'>Loading ...</p>
                         </div>
