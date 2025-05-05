@@ -155,7 +155,7 @@ export const NewPost = () => {
 
                 <section className="flex md:space-x-2  space-x-1">
                     <div>
-                        <ProfileIcon width={12} height={12} url={user?.pp} ></ProfileIcon>
+                        <ProfileIcon width={10} height={10} url={user?.pp} ></ProfileIcon>
                     </div>
 
                     <textarea name="info" className="p-2 resize-none w-2/3 max-sm:w-full h-[100px] text-xl focus:outline-none border-2 border-slate-400  rounded-md " onChange={(e) => { setNewPost({ ...newPost, [e.target.name]: e.target.value }) }} value={newPost.info} placeholder="Write your thoughts..." id=""></textarea>

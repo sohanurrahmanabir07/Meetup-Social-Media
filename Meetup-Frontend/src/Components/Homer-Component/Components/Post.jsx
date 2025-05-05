@@ -68,7 +68,7 @@ export const Post = ({ item, HandleLike,handleDeletePost }) => {
 
                 <section className="flex justify-between  ">
                     <div className="flex space-x-2">
-                        <ProfileIcon width={12} height={12} url={item?.userID?.pp} ></ProfileIcon>
+                        <ProfileIcon width={10} height={10} url={item?.userID?.pp} ></ProfileIcon>
                         <div>
                             <p onClick={()=>navigate('/profile',{state:{user:item?.userID}})} className="text-lg font-semibold"> {item?.userID['name']}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >{<DateTime item={item} ></DateTime>}</span> </p>
                             <p className="text-sm">{item?.userID?.worksAt || 'N/A'}</p>
@@ -139,7 +139,7 @@ export const Post = ({ item, HandleLike,handleDeletePost }) => {
 
 
                 <section className="flex items-center">
-                    <ProfileIcon width={12} height={12}></ProfileIcon>
+                    <ProfileIcon width={10} height={10}></ProfileIcon>
                     <div className="bg-purple-950  w-full h-50/100 text-white rounded-lg">
                         <SendingBox messagField={messagField} setMessageField={setMessageField} handleSend={handleSend} ></SendingBox>
                     </div>
