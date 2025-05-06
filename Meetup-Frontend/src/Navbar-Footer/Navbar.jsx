@@ -48,7 +48,7 @@ export const Navbar = () => {
     return (
 
 
-        <div className=' dark:bg-slate-950 max-sm:p-2 bg-purple-950 text-gray-300 sticky top-0 '>
+        <div className=' dark:bg-slate-950 max-sm:p-2 z-5 bg-purple-950 text-gray-300 sticky top-0 '>
 
             {
                 showSearch ?
