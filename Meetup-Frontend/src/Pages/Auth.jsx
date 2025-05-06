@@ -8,7 +8,7 @@ import { addUser } from '../redux/SocialStore'
 
 export const Auth = () => {
     const user = useSelector((state) => state.SocialMedia.users)
-    const [loading,setLoading]=useState(true)
+    const [loading,setLoading]=useState(false)
     const location = useLocation()
     let type = location.state?.from
 
@@ -93,7 +93,7 @@ export const Auth = () => {
             delete formData.email
             delete formData.chatHistory
             delete formData.friends
-
+            setLoading(true)
             axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/login`, formData, {
                 withCredentials: true,
                 headers: {
@@ -139,6 +139,9 @@ export const Auth = () => {
 
 
                 )
+                .finally(()=>{
+                    setLoading(false)
+                })
 
         }
 
