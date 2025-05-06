@@ -8,7 +8,7 @@ import { addUser } from '../redux/SocialStore'
 
 export const Auth = () => {
     const user = useSelector((state) => state.SocialMedia.users)
-    const [loading,setLoading]=useState(false)
+    const [loading,setLoading]=useState(true)
     const location = useLocation()
     let type = location.state?.from
 
@@ -217,7 +217,7 @@ export const Auth = () => {
                         
                         {type=='signin'? 'Login': 'Register'}
 
-                        {loading && <span className="loading loading-spinner loading-xs"></span>}
+                        {loading && (<span className="loading loading-spinner loading-xs"></span>)}
 
 
 
