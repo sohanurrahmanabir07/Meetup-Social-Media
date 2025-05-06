@@ -68,7 +68,7 @@ export const Home = () => {
           <HomeProfile></HomeProfile>
         </section>
 
-        <section className='w-60/100 border-l-2 border-gray-300 max-sm:w-full'>
+        <section className='w-60/100 md:border-l-2 border-gray-300 max-sm:w-full'>
           <NewsFeed></NewsFeed>
         </section>
 

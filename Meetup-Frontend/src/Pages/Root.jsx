@@ -49,7 +49,7 @@ export const Root = () => {
           });
 
         })
-      
+
     }
 
 
@@ -76,7 +76,10 @@ export const Root = () => {
   return (
     <div className='dark:bg-slate-900'>
       <Navbar></Navbar>
-      <Outlet></Outlet>
+      <div className='max-sm:px-3'>
+        <Outlet></Outlet>
+      </div>
+
     </div>
 
   )
