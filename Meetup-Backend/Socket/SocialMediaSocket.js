@@ -268,9 +268,10 @@ const SocialMediaSocket = (socket, io) => {
 
         if (finalResponse) {
 
-            console.log('Notification', finalResponse)
+            // console.log('Notification', finalResponse)
 
             if (onlineUsers[data.receiverID] && data.type != 'dislike') {
+                console.log('receiver online ')
                 socket.to(onlineUsers[data.receiverID]).emit('getNotification', finalResponse)
 
             }

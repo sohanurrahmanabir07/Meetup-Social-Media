@@ -4,9 +4,9 @@ import { faComment, faHeart } from "@fortawesome/free-regular-svg-icons"
 import { faUserPlus } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from "react-router"
 import { useSelector } from "react-redux"
-import { Modal } from "@mui/material"
+
 import { useRef } from "react"
-import { Post } from "../../Components/Homer-Component/Components/Post"
+
 
 
 export const Notification = ({ item, handleMarkRead, index }) => {
@@ -15,19 +15,18 @@ export const Notification = ({ item, handleMarkRead, index }) => {
     const openNotification=useRef(null)
     return (
 
-        <li className={`list-row max-sm:rounded-sm  ${item?.read == false ? `bg-purple-600 text-white` : ''}  my-3 `} onClick={() => handleMarkRead(index)} >
+        <li  className={`list-row max-sm:rounded-sm  ${item?.read == false ? `bg-purple-600 text-white` : ''}  my-3 `} onClick={() => handleMarkRead(index)} >
 
-            {/* <Modal box={openNotification} Component={<Post item={item} ></Post>}  ></Modal> */}
             <div className="flex items-center" onClick={() => navigate('/profile', { state: { user: item.senderID } })}>
                 <ProfileIcon url={item?.senderID?.pp} width={10} height={10} ></ProfileIcon>
             </div>
 
-            <div ref={openNotification} onClick={()=>openNotification.current.showModal()} > 
+            <div ref={openNotification}  > 
 
                 {
                     item.type == 'comment' || item.type == 'like' ?
                         (
-                            <p className="list-col-wrap text-base">
+                            <p className="list-col-wrap text-base" onClick={()=> navigate('/post', { state: { 'item': item } })}>
                                 {item.senderID?.name}<span className='font-semibold'></span> Has {item.type == 'comment' ? ' Commented' : 'Liked'} Your Post
                             </p>
                         )
@@ -36,8 +35,8 @@ export const Notification = ({ item, handleMarkRead, index }) => {
                         item.type == 'friendRequest' ?
                             (
 
-                                <p className="list-col-wrap text-base" onClick={() => navigate('/profile', { state: { 'user': item.info?.senderID, 'feed': 'friends' } })}>
-                                    {item.info?.senderID?.name}<span className='font-semibold'></span> Has Sent You Friend Request
+                                <p className="list-col-wrap text-base" onClick={() => navigate('/profile', { state: { 'user': item?.info?.senderID, 'feed': 'friends' } })}>
+                                    {item?.info?.senderID?.name}<span className='font-semibold'></span> Has Sent You Friend Request
                                 </p>
 
                             )
@@ -45,7 +44,7 @@ export const Notification = ({ item, handleMarkRead, index }) => {
                             (
 
                                 <p className="list-col-wrap text-base" onClick={() => navigate('/profile', { state: { user: item.info?.receiverID } })}>
-                                    {item.info?.receiverID?.name}<span className='font-semibold'></span> Has Accepted Your Friend Request
+                                    {item?.info?.receiverID?.name}<span className='font-semibold'></span> Has Accepted Your Friend Request
                                 </p>
 
                             )

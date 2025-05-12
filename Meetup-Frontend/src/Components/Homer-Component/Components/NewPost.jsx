@@ -8,6 +8,9 @@ import Swal from "sweetalert2"
 import socket from "../../../Socket/SocketServer"
 import { ProfileIcon } from "./ProfileIcon"
 
+
+
+
 export const NewPost = () => {
     const PhotoInputRef = useRef();
     const VideoInputRef = useRef()
@@ -54,16 +57,14 @@ export const NewPost = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+       
 
 
-
-        setLoading(true)
         let formData = new FormData()
         if (File) {
 
 
             if (newPost.info != '') {
-                const caption = newPost.info
                 const data = { ...newPost }
                 data.caption = newPost.info
                 data.info = ''
@@ -78,65 +79,70 @@ export const NewPost = () => {
 
 
         } else {
+           
             formData = newPost
 
+            
         }
 
+      
+           
+            setLoading(true)
+            axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/newsPost`, formData, {
+                withCredentials: true
+            })
+                .then((res) => {
 
-        axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/newsPost`, formData, {
-            withCredentials: true
-        })
-            .then((res) => {
+                    if (res.status == 201) {
+                        Swal.fire({
+                            icon: "success",
+                            title: 'You have Posted Successfully',
 
-                if (res.status == 201) {
+
+                        });
+
+                        const data = {
+                            friends: user.friends,
+                            post: res.data
+                        }
+
+
+
+                        socket.emit('UpdateFeed', data)
+                        console.log('emitting data', data)
+
+
+
+
+                    }
+                    setNewPost({
+                        userID: user._id,
+                        type: 'status',
+                        info: '',
+                        caption: '',
+                        imageUrl: '',
+                        shareMap: {},
+                        TimeStamp: new Date()
+                    })
+                    setFile(null)
+                    setImagePath(null)
+
+
+
+
+                })
+                .catch((err) => {
                     Swal.fire({
-                        icon: "success",
-                        title: 'You have Posted Successfully',
-
+                        icon: "error",
+                        title: err.message,
+                        text: "Something went wrong!",
 
                     });
-
-                    const data = {
-                        friends: user.friends,
-                        post: res.data
-                    }
-
-
-
-                    socket.emit('UpdateFeed', data)
-                    console.log('emitting data', data)
-
-
-
-
-                }
-                setNewPost({
-                    userID: user._id,
-                    type: 'status',
-                    info: '',
-                    caption: '',
-                    imageUrl: '',
-                    shareMap: {},
-                    TimeStamp: new Date()
                 })
-                setFile(null)
-                setImagePath(null)
-
-
-
-
-            })
-            .catch((err) => {
-                Swal.fire({
-                    icon: "error",
-                    title: err.message,
-                    text: "Something went wrong!",
-
-                });
-            })
-            .finally(() => {
-                setLoading(false)  // move this here
-            })
+                .finally(() => {
+                    setLoading(false)  // move this here
+                })
+       
 
 
 
@@ -151,7 +157,7 @@ export const NewPost = () => {
     return (
         <div className="space-y-2 p-2 md:p-5  dark:bg-slate-950 dark:text-gray-300 border-1 border-slate-500 rounded-md w-90/100 max-sm:w-full">
 
-            <form action="" onSubmit={handleSubmit} >
+            <form  onSubmit={handleSubmit} >
 
                 <section className="flex md:space-x-2  space-x-1">
                     <div>
@@ -161,6 +167,7 @@ export const NewPost = () => {
                     <textarea name="info" className="p-2 resize-none w-2/3 max-sm:w-full h-[100px] text-xl focus:outline-none border-2 border-slate-400  rounded-md " onChange={(e) => { setNewPost({ ...newPost, [e.target.name]: e.target.value }) }} value={newPost.info} placeholder="Write your thoughts..." id=""></textarea>
 
                     <button className="btn btn-error max-sm:w-10 max-sm:text-xs" disabled={Loading || !(File || newPost.info !== '')}> {Loading ? 'Posting...' : 'Post'}</button>
+                 
 
                 </section>
 
@@ -206,6 +213,7 @@ export const NewPost = () => {
 
                     <button type="button" className="btn rounded-lg" disabled={true}  > <span><FontAwesomeIcon icon={faCalendar} size="md" className="text-red-600" ></FontAwesomeIcon></span> Event</button>
                 </div>
+
 
 
 

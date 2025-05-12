@@ -16,6 +16,7 @@ import { Chatlist } from './Pages/Messenger/Components/Chatlist.jsx'
 import { MobileRoute } from './Components/MobileRoute.jsx'
 import { NotificationMbile } from './Navbar-Footer/NavbarTools/Notication Mobile view/NotificationMbile.jsx'
 import { NotificationInfo } from './Navbar-Footer/NavbarTools/NotificationInfo.jsx'
+import { SinglePost } from './Components/Homer-Component/Components/SinglePost.jsx'
 
 
 
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         element: <Auth></Auth>,
         path: "/auth"
+      },
+      {
+        element:<SinglePost></SinglePost>,
+        path:'/post'
       }
     ]
   }

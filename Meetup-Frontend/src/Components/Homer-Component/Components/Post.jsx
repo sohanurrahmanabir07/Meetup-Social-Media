@@ -11,17 +11,19 @@ import { DateTime } from "./DateTime"
 import { useNavigate } from "react-router"
 
 
-export const Post = ({ item, HandleLike,handleDeletePost }) => {
+export const Post = ({ item, HandleLike, handleDeletePost }) => {
+
+
     const [totalComment, setTotalComment] = useState(4)
     const [messagField, setMessageField] = useState('')
     const [showComments, setShowComments] = useState(false)
     const user = useSelector((state) => state.SocialMedia.users)
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const LikeList = new Set(item.likes)
     const handleLike = () => {
         const data = {
-            senderID: user._id,
-            receiverID: item.userID._id,
+            senderID: user?._id,
+            receiverID: item?.userID?._id,
             info: item,
             type: 'like',
             TimeStamp: new Date()
@@ -30,19 +32,20 @@ export const Post = ({ item, HandleLike,handleDeletePost }) => {
         socket.emit('incoming_notification', data)
     }
 
+
     const handleSend = (e) => {
         e.preventDefault()
 
         const comment = {
-            userID: user._id,
+            userID: user?._id,
             comment: messagField,
-            postID: item._id,
+            postID: item?._id,
             TimeStamp: new Date()
         }
 
         const data = {
-            senderID: user._id,
-            receiverID: item.userID._id,
+            senderID: user?._id,
+            receiverID: item?.userID?._id,
             info: comment,
             type: 'comment',
             TimeStamp: new Date()
@@ -70,18 +73,18 @@ export const Post = ({ item, HandleLike,handleDeletePost }) => {
                     <div className="flex space-x-2">
                         <ProfileIcon width={10} height={10} url={item?.userID?.pp} ></ProfileIcon>
                         <div>
-                            <p onClick={()=>navigate('/profile',{state:{user:item?.userID}})} className="text-lg font-semibold"> {item?.userID['name']}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >{<DateTime item={item} ></DateTime>}</span> </p>
+                            <p onClick={() => navigate('/profile', { state: { user: item?.userID } })} className="text-lg font-semibold"> {item?.userID?.name}  <span className="text-gray-500 text-sm">&#9679;</span> <span className="text-gray-500 text-sm" >{<DateTime item={item} ></DateTime>}</span> </p>
                             <p className="text-sm">{item?.userID?.worksAt || 'N/A'}</p>
                         </div>
                     </div>
 
                     {
-                        user._id == item.userID._id && (
+                        user?._id == item?.userID?._id && (
                             <div className="dropdown dropdown-end">
 
                                 <FontAwesomeIcon className="w-5 cursor-pointer" tabIndex={0} icon={faEllipsisVertical} size="xs" ></FontAwesomeIcon>
                                 <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm space-y-3">
-                                    <p onClick={handleDeletePost}  className="hover:bg-purple-950 hover:text-gray-300 text-base font-semibold rounded-sm cursor-pointer">Delete</p>
+                                    <p onClick={() => handleDeletePost(item)} className="hover:bg-purple-950 hover:text-gray-300 text-base font-semibold rounded-sm cursor-pointer">Delete</p>
                                     <p className="hover:bg-purple-950 hover:text-gray-300 text-base font-semibold rounded-sm cursor-pointer">Hide</p>
                                 </ul>
                             </div>
@@ -123,7 +126,7 @@ export const Post = ({ item, HandleLike,handleDeletePost }) => {
 
                     <div className="flex space-x-2">
                         <p className="text-base" onClick={() => HandleLike(item)} >
-                            <FontAwesomeIcon icon={faThumbsUp} className={` cursor-pointer  ${LikeList.has(user._id) ? `text-blue-500` : ``} `} size="lg" ></FontAwesomeIcon> ({item?.likes?.length})
+                            <FontAwesomeIcon icon={faThumbsUp} className={` cursor-pointer  ${LikeList.has(user?._id) ? `text-blue-500` : ``} `} size="lg" ></FontAwesomeIcon> ({item?.likes?.length})
 
                         </p>
                         <p className="text-base">

@@ -14,7 +14,7 @@ import { ProfileIcon } from '../Components/Homer-Component/Components/ProfileIco
 import { useIsMobile } from '../CustomHooks/useIsMobile'
 import { Searching } from './NavbarTools/Searching'
 
-export const Navbar = () => {
+export const Navbar = ({postItem,setPostItem}) => {
     const navigate = useNavigate()
 
     const user = useSelector((state) => state.SocialMedia.users)
@@ -39,6 +39,10 @@ export const Navbar = () => {
             dispatch(update_rqst_pending({ data: result.data, type: result.type }))
 
         })
+
+        return ()=>{
+            socket.off('updateRqstPendingList')
+        }
 
     }, [])
 
@@ -115,9 +119,9 @@ export const Navbar = () => {
 
                                         (<div className="dropdown dropdown-center cursot-pointer  p-1 relative">
 
-                                            <FontAwesomeIcon tabIndex={isMobile ? null : 0} onClick={isMobile ? () => navigate('/notification') : ''} icon={faBell} size='lg' className='cursor-pointer' ></FontAwesomeIcon>
+                                            <FontAwesomeIcon tabIndex={isMobile ? null : 0} onClick={isMobile ? () => navigate('/notification') : undefined} icon={faBell} size='lg' className='cursor-pointer' ></FontAwesomeIcon>
                                             <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 lg:w-[400px] max-sm:w-52 p-2 shadow-sm md:w-52">
-                                                <NotificationInfo unreadCount={unreadCount} setUnreadCount={setUnreadCount}></NotificationInfo>
+                                                <NotificationInfo postItem={postItem} setPostItem={setPostItem}  unreadCount={unreadCount} setUnreadCount={setUnreadCount}></NotificationInfo>
 
                                             </ul>
                                             <p className='absolute -top-2 -right-2 bg-blue-600 text-gray-200 rounded-full text-xs w-4 h-4 text-center  '>{unreadCount}</p>
@@ -137,22 +141,6 @@ export const Navbar = () => {
                                 </div>) : ''}
 
                                 <div className="flex-none">
-
-                                    <div className="dropdown dropdown-end">
-
-
-                                        <div
-                                            tabIndex={0}
-                                            className="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow">
-                                            <div className="card-body">
-                                                <span className="text-lg font-bold">8 Items</span>
-                                                <span className="text-info">Subtotal: $999</span>
-                                                <div className="card-actions">
-                                                    <button className="btn btn-primary btn-block">View cart</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
 
 

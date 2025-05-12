@@ -10,27 +10,29 @@ import { useNotifactions } from '../CustomHooks/useNotifactions'
 import { addNotification, getPendingList, getRequestList, loadNotification } from '../redux/SocialStore'
 import axios from 'axios'
 import Swal from 'sweetalert2'
+import { useOutletContext } from 'react-router'
+import { useFunctions } from '../CustomHooks/useFunctions'
+
 
 export const Home = () => {
   const user = useSelector((state) => state.SocialMedia.users)
 
+  const { postData,setPostData,HandleLike,handleDeletePost} = useOutletContext()
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    if (!socket.connected && user?._id) {
-      // socket.connect();
-      // socket.emit('join-user', { userID: user._id });
 
-      socket.on('getNotification', (data) => {
-        // console.log('got the notification',data)
-        dispatch(addNotification(data))
-      })
-    }
-  }, [user])
+  // useEffect(() => {
+  //   if (!socket.connected && user?._id) {
+  //     // socket.connect();
+  //     // socket.emit('join-user', { userID: user._id });
+
+     
+  // }, [user])
 
   const notification = user && useNotifactions(user._id)
 
   useEffect(() => {
+    console.log('refresh')
     if (user) {
       axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/getRequestPendingList?id=${user._id}`)
         .then((res) => {
@@ -47,18 +49,24 @@ export const Home = () => {
         }))
     }
 
-  
+
 
   }, [])
 
   useEffect(() => {
     dispatch(loadNotification(notification))
   }, [notification])
+
+
+  const {AllShow,Like}=useFunctions()
+
   return (
     <div className='text-3xl lg:max-w-[1340px] lg:m-auto'>
 
+      {/* <button onClick={()=>Like('Leku')}>Click here</button> */}
+
       <div className='md:hidden my-5 flex justify-between'>
-        <SideBar Component={<HomeProfile></HomeProfile>}buttonName={'Profile'} ></SideBar>
+        <SideBar Component={<HomeProfile></HomeProfile>} buttonName={'Profile'} ></SideBar>
         <RightSideBar Component={<RightPortion></RightPortion>} buttonName={'People'} ></RightSideBar>
       </div>
 
@@ -69,7 +77,7 @@ export const Home = () => {
         </section>
 
         <section className='w-60/100 md:border-l-2 border-gray-300 max-sm:w-full'>
-          <NewsFeed></NewsFeed>
+          <NewsFeed postData={postData} setPostData={setPostData} HandleLike={HandleLike} handleDeletePost={handleDeletePost} ></NewsFeed>
         </section>
 
         <section className='w-20/100 max-sm:hidden'>

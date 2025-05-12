@@ -8,7 +8,9 @@ const initialState = {
   pendingList: [],
   requestSet:[],
   pendingSet:[],
-  onlineUsers:{}
+  onlineUsers:{},
+  allPost:[],
+  Post:{}
 
 };
 
@@ -79,6 +81,13 @@ const SocialMediaSlice = createSlice({
       
 
     },
+
+
+    getAllPost:(state,action)=>{
+      state.allPost=state.action
+
+      console.log('all post for newsfeed',state.allPost)
+    },
     update_rqst_pending:(state,action)=>{
       const { data, type } = action.payload
       if(type == 'rqstList'){
@@ -102,8 +111,9 @@ const SocialMediaSlice = createSlice({
       state.requestList=action.payload
       state.requestSet=[]
       state.requestSet=state.requestList.map((item)=>item.receiverID._id)
+    },
 
-
+    getPostModal:(state,action)=>{
 
     },
     getPendingList:(state,action)=>{

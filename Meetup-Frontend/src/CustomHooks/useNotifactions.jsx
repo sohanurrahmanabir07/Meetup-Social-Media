@@ -12,7 +12,6 @@ export const useNotifactions = (id) => {
         withCredentials:true
     })
     .then((res)=>{
-      console.log('Fetched The notfication data',res.data)
       setNotification(res.data)})
     .catch((err)=>console.log(err))
 
